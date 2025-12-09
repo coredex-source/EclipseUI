@@ -1,0 +1,5 @@
+.dev/
+.gradle/
+.kotlin/
+build/
+run/

@@ -1,0 +1,27 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "MIT"
+issueTrackerURL = "https://github.com/eclipseui/EclipseUI/issues"
+
+[[mods]]
+modId = "eclipseui"
+version = "${version}"
+displayName = "EclipseUI"
+description = '''A modern, themeable configuration UI library for Minecraft mods'''
+authors = "coredex-source"
+logoFile = "assets/eclipseui/icon.png"
+displayTest = "IGNORE_ALL_VERSION"
+
+[[dependencies.eclipseui]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.10,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.eclipseui]]
+modId = "minecraft"
+type = "required"
+versionRange = "[${minecraft_version},${minecraft_version_max})"
+ordering = "NONE"
+side = "CLIENT"

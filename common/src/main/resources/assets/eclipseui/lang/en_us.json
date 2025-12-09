@@ -1,0 +1,21 @@
+{
+  "eclipseui.config.title": "EclipseUI Configuration",
+  "eclipseui.config.category.about": "About",
+  
+  "eclipseui.button.save": "Save",
+  "eclipseui.button.reset": "Reset",
+  "eclipseui.button.done": "Done",
+  "eclipseui.button.cancel": "Cancel",
+  
+  "eclipseui.toggle.on": "ON",
+  "eclipseui.toggle.off": "OFF",
+  
+  "eclipseui.tooltip.requiresRestart": "Requires game restart",
+  "eclipseui.tooltip.modified": "Modified",
+  
+  "eclipseui.dialog.unsavedChanges.title": "Unsaved Changes",
+  "eclipseui.dialog.unsavedChanges.message": "You have unsaved changes. Do you want to save before closing?",
+  "eclipseui.dialog.unsavedChanges.save": "Save & Close",
+  "eclipseui.dialog.unsavedChanges.discard": "Discard Changes",
+  "eclipseui.dialog.unsavedChanges.cancel": "Cancel"
+}
