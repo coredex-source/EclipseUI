@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "eclipseplatform",
+  "version": "${version}",
+  "name": "EclipsePlatform",
+  "description": "Platform abstraction layer for Eclipse libraries",
+  "authors": ["EclipseUI Team"],
+  "contact": {
+    "homepage": "https://github.com/coredex-source/EclipseUI",
+    "sources": "https://github.com/coredex-source/EclipseUI"
+  },
+  "license": "MIT",
+  "icon": "assets/eclipseplatform/icon.png",
+  "environment": "client",
+  "depends": {
+    "fabricloader": ">=${fabric_loader_version}",
+    "minecraft": ">=${minecraft_version} <${minecraft_version_max}",
+    "eclipsecore": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": ["library"]
+    }
+  }
+}

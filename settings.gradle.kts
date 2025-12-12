@@ -13,6 +13,17 @@ plugins {
 
 rootProject.name = "EclipseUI"
 
-include("common")
-include("fabric")
-include("neoforge")
+// EclipseCore - Core utilities
+include("eclipse-core:common")
+include("eclipse-core:fabric")
+include("eclipse-core:neoforge")
+
+// EclipsePlatform - Platform abstraction layer
+include("eclipse-platform:common")
+include("eclipse-platform:fabric")
+include("eclipse-platform:neoforge")
+
+// EclipseUI - UI library with platform-specific mods
+include("eclipse-ui:common")
+include("eclipse-ui:fabric")
+include("eclipse-ui:neoforge")
