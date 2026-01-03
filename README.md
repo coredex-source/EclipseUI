@@ -9,6 +9,36 @@ A lightweight, themeable config screen library for Minecraft mods.
 - **Rich widgets**: toggles, sliders, dropdowns, color pickers, text fields
 - **ModMenu** integration out of the box
 
+## Installation
+
+### For Mod Developers
+
+Add EclipseUI to your mod by following the [Usage Guide](USAGE.md).
+
+**Quick dependency setup:**
+
+```kotlin
+repositories {
+    maven {
+        url = uri("https://maven.pkg.github.com/coredex-source/EclipseUI")
+        credentials {
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
+            password = project.findProperty("gpr.token") as String? ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
+}
+
+dependencies {
+    // Fabric
+    modImplementation("dev.eclipseui:EclipseUI-fabric:1.0.0+mc1.21.10")
+    
+    // NeoForge
+    implementation("dev.eclipseui:EclipseUI-neoforge:1.0.0+mc1.21.10")
+}
+```
+
+See the full [Usage Guide](USAGE.md) for complete setup instructions and examples.
+
 ## Quick Start
 
 ```java
@@ -31,6 +61,25 @@ EclipseUI.configScreen()
         )
     )
     .build();
+```
+
+## Documentation
+
+- [Usage Guide](USAGE.md) - Complete guide on integrating EclipseUI into your mod
+- [GitHub Issues](https://github.com/coredex-source/EclipseUI/issues) - Report bugs or request features
+
+## Building from Source
+
+```bash
+# Clone the repository
+git clone https://github.com/coredex-source/EclipseUI.git
+cd EclipseUI
+
+# Build all modules
+./gradlew build
+
+# Publish to local Maven
+./gradlew publishToMavenLocal
 ```
 
 ## License
