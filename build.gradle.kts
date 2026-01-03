@@ -83,14 +83,51 @@ tasks.register<Jar>("combinedFabricJar") {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     
     dependsOn(
+        ":eclipse-core:common:remapJar",
         ":eclipse-core:fabric:remapJar",
+        ":eclipse-platform:common:remapJar",
         ":eclipse-platform:fabric:remapJar",
+        ":eclipse-ui:common:remapJar",
         ":eclipse-ui:fabric:remapJar"
     )
     
-    from(zipTree(project(":eclipse-core:fabric").tasks.named("remapJar").get().outputs.files.singleFile))
-    from(zipTree(project(":eclipse-platform:fabric").tasks.named("remapJar").get().outputs.files.singleFile))
-    from(zipTree(project(":eclipse-ui:fabric").tasks.named("remapJar").get().outputs.files.singleFile))
+    // Use the custom combined fabric.mod.json with variable expansion
+    from("combined-fabric.mod.json") {
+        rename { "fabric.mod.json" }
+        filter { line ->
+            line.replace("@VERSION@", BuildConfig.getVersionString())
+                .replace("@FABRIC_LOADER@", BuildConfig.FABRIC_LOADER_VERSION)
+                .replace("@MC_MIN@", BuildConfig.MINECRAFT_VERSION)
+                .replace("@MC_MAX@", BuildConfig.MINECRAFT_VERSION_MAX)
+        }
+    }
+    
+    // Include eclipseui fabric module (exclude its fabric.mod.json and nested JARs)
+    from(zipTree(project(":eclipse-ui:fabric").tasks.named("remapJar").get().outputs.files.singleFile)) {
+        exclude("fabric.mod.json")
+        exclude("META-INF/jars/**")
+    }
+    
+    // Include common modules directly (these contain the actual classes)
+    from(zipTree(project(":eclipse-core:common").tasks.named("remapJar").get().outputs.files.singleFile)) {
+        exclude("fabric.mod.json")
+    }
+    from(zipTree(project(":eclipse-platform:common").tasks.named("remapJar").get().outputs.files.singleFile)) {
+        exclude("fabric.mod.json")
+    }
+    from(zipTree(project(":eclipse-ui:common").tasks.named("remapJar").get().outputs.files.singleFile)) {
+        exclude("fabric.mod.json")
+    }
+    
+    // Include fabric-specific modules (exclude their nested JARs and config files)
+    from(zipTree(project(":eclipse-core:fabric").tasks.named("remapJar").get().outputs.files.singleFile)) {
+        exclude("fabric.mod.json")
+        exclude("META-INF/jars/**")
+    }
+    from(zipTree(project(":eclipse-platform:fabric").tasks.named("remapJar").get().outputs.files.singleFile)) {
+        exclude("fabric.mod.json")
+        exclude("META-INF/jars/**")
+    }
     
     manifest {
         attributes(
@@ -112,14 +149,34 @@ tasks.register<Jar>("combinedFabricSourcesJar") {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     
     dependsOn(
+        ":eclipse-core:common:remapSourcesJar",
         ":eclipse-core:fabric:remapSourcesJar",
+        ":eclipse-platform:common:remapSourcesJar",
         ":eclipse-platform:fabric:remapSourcesJar",
+        ":eclipse-ui:common:remapSourcesJar",
         ":eclipse-ui:fabric:remapSourcesJar"
     )
     
-    from(zipTree(project(":eclipse-core:fabric").tasks.named("remapSourcesJar").get().outputs.files.singleFile))
-    from(zipTree(project(":eclipse-platform:fabric").tasks.named("remapSourcesJar").get().outputs.files.singleFile))
-    from(zipTree(project(":eclipse-ui:fabric").tasks.named("remapSourcesJar").get().outputs.files.singleFile))
+    from(zipTree(project(":eclipse-ui:fabric").tasks.named("remapSourcesJar").get().outputs.files.singleFile)) {
+        exclude("META-INF/jars/**")
+    }
+    from(zipTree(project(":eclipse-core:common").tasks.named("remapSourcesJar").get().outputs.files.singleFile)) {
+        exclude("fabric.mod.json")
+    }
+    from(zipTree(project(":eclipse-platform:common").tasks.named("remapSourcesJar").get().outputs.files.singleFile)) {
+        exclude("fabric.mod.json")
+    }
+    from(zipTree(project(":eclipse-ui:common").tasks.named("remapSourcesJar").get().outputs.files.singleFile)) {
+        exclude("fabric.mod.json")
+    }
+    from(zipTree(project(":eclipse-core:fabric").tasks.named("remapSourcesJar").get().outputs.files.singleFile)) {
+        exclude("fabric.mod.json")
+        exclude("META-INF/jars/**")
+    }
+    from(zipTree(project(":eclipse-platform:fabric").tasks.named("remapSourcesJar").get().outputs.files.singleFile)) {
+        exclude("fabric.mod.json")
+        exclude("META-INF/jars/**")
+    }
 }
 
 // Combined JAR tasks for NeoForge
@@ -134,14 +191,39 @@ tasks.register<Jar>("combinedNeoForgeJar") {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     
     dependsOn(
+        ":eclipse-core:common:jar",
         ":eclipse-core:neoforge:jar",
+        ":eclipse-platform:common:jar",
         ":eclipse-platform:neoforge:jar",
+        ":eclipse-ui:common:jar",
         ":eclipse-ui:neoforge:jar"
     )
     
-    from(zipTree(project(":eclipse-core:neoforge").tasks.named("jar").get().outputs.files.singleFile))
-    from(zipTree(project(":eclipse-platform:neoforge").tasks.named("jar").get().outputs.files.singleFile))
-    from(zipTree(project(":eclipse-ui:neoforge").tasks.named("jar").get().outputs.files.singleFile))
+    // Include eclipseui neoforge module FIRST so its neoforge.mods.toml takes priority
+    from(zipTree(project(":eclipse-ui:neoforge").tasks.named("jar").get().outputs.files.singleFile)) {
+        exclude("META-INF/jarjar/**")  // Exclude nested JARs
+    }
+    
+    // Include common modules directly
+    from(zipTree(project(":eclipse-core:common").tasks.named("jar").get().outputs.files.singleFile)) {
+        exclude("META-INF/neoforge.mods.toml")
+    }
+    from(zipTree(project(":eclipse-platform:common").tasks.named("jar").get().outputs.files.singleFile)) {
+        exclude("META-INF/neoforge.mods.toml")
+    }
+    from(zipTree(project(":eclipse-ui:common").tasks.named("jar").get().outputs.files.singleFile)) {
+        exclude("META-INF/neoforge.mods.toml")
+    }
+    
+    // Include neoforge-specific modules
+    from(zipTree(project(":eclipse-core:neoforge").tasks.named("jar").get().outputs.files.singleFile)) {
+        exclude("META-INF/neoforge.mods.toml")
+        exclude("META-INF/jarjar/**")
+    }
+    from(zipTree(project(":eclipse-platform:neoforge").tasks.named("jar").get().outputs.files.singleFile)) {
+        exclude("META-INF/neoforge.mods.toml")
+        exclude("META-INF/jarjar/**")
+    }
     
     manifest {
         attributes(
@@ -163,14 +245,32 @@ tasks.register<Jar>("combinedNeoForgeSourcesJar") {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     
     dependsOn(
+        ":eclipse-core:common:sourcesJar",
         ":eclipse-core:neoforge:sourcesJar",
+        ":eclipse-platform:common:sourcesJar",
         ":eclipse-platform:neoforge:sourcesJar",
+        ":eclipse-ui:common:sourcesJar",
         ":eclipse-ui:neoforge:sourcesJar"
     )
     
-    from(zipTree(project(":eclipse-core:neoforge").tasks.named("sourcesJar").get().outputs.files.singleFile))
-    from(zipTree(project(":eclipse-platform:neoforge").tasks.named("sourcesJar").get().outputs.files.singleFile))
-    from(zipTree(project(":eclipse-ui:neoforge").tasks.named("sourcesJar").get().outputs.files.singleFile))
+    from(zipTree(project(":eclipse-ui:neoforge").tasks.named("sourcesJar").get().outputs.files.singleFile)) {
+        exclude("META-INF/jarjar/**")
+    }
+    from(zipTree(project(":eclipse-core:common").tasks.named("sourcesJar").get().outputs.files.singleFile)) {
+        exclude("META-INF/neoforge.mods.toml")
+    }
+    from(zipTree(project(":eclipse-platform:common").tasks.named("sourcesJar").get().outputs.files.singleFile)) {
+        exclude("META-INF/neoforge.mods.toml")
+    }
+    from(zipTree(project(":eclipse-ui:common").tasks.named("sourcesJar").get().outputs.files.singleFile)) {
+        exclude("META-INF/neoforge.mods.toml")
+    }
+    from(zipTree(project(":eclipse-core:neoforge").tasks.named("sourcesJar").get().outputs.files.singleFile)) {
+        exclude("META-INF/neoforge.mods.toml")
+    }
+    from(zipTree(project(":eclipse-platform:neoforge").tasks.named("sourcesJar").get().outputs.files.singleFile)) {
+        exclude("META-INF/neoforge.mods.toml")
+    }
 }
 
 // Task to copy all artifacts to bin folder

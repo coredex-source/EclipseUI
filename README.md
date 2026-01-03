@@ -75,8 +75,8 @@ EclipseUI.configScreen()
 git clone https://github.com/coredex-source/EclipseUI.git
 cd EclipseUI
 
-# Build all modules
-./gradlew build
+# Clean build all modules
+./gradlew clean cleanBin buildAll
 
 # Publish to local Maven
 ./gradlew publishToMavenLocal

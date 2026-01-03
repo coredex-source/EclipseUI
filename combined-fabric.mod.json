@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "eclipseui",
+  "version": "@VERSION@",
+  "name": "EclipseUI",
+  "description": "A modern, themeable configuration UI library for Minecraft mods",
+  "authors": [
+    "coredex-source"
+  ],
+  "contact": {
+    "homepage": "https://github.com/coredex-source/EclipseUI",
+    "sources": "https://github.com/coredex-source/EclipseUI",
+    "issues": "https://github.com/coredex-source/EclipseUI/issues"
+  },
+  "license": "MIT",
+  "icon": "assets/eclipseui/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.eclipseui.fabric.EclipseUIFabric"
+    ],
+    "modmenu": [
+      "dev.eclipseui.fabric.ModMenuIntegration"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=@FABRIC_LOADER@",
+    "minecraft": ">=@MC_MIN@ <@MC_MAX@",
+    "java": ">=21"
+  },
+  "suggests": {
+    "modmenu": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": ["library"]
+    }
+  }
+}
