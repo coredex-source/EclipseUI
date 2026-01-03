@@ -229,6 +229,21 @@ public class ColorPickerWidget extends OptionWidget {
         cursorBlinkTicks++;
     }
     
+    /**
+     * Determines the Y position for the picker, flipping upward if needed to avoid clipping.
+     */
+    private int getPickerY(int pickerHeight) {
+        int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+        int normalY = dim.getLimitY() + 2;
+        
+        // Check if picker would extend beyond screen bottom (leave 10px margin)
+        if ((normalY + pickerHeight) > (screenHeight - 10)) {
+            // Render above the widget instead
+            return dim.y() - pickerHeight - 2;
+        }
+        return normalY;
+    }
+    
     @Override
     public void renderOverlay(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         if (!this.expanded) return;
@@ -242,7 +257,7 @@ public class ColorPickerWidget extends OptionWidget {
         int pickerWidth = 150;
         int pickerHeight = 120;
         int pickerX = controlDim.x();
-        int pickerY = dim.getLimitY() + 2;
+        int pickerY = getPickerY(pickerHeight);
         
         // Background
         if (theme.useVanillaWidgets()) {
@@ -359,7 +374,8 @@ public class ColorPickerWidget extends OptionWidget {
         
         if (this.expanded) {
             int pickerX = controlDim.x();
-            int pickerY = dim.getLimitY() + 2;
+            int pickerHeight = 120;
+            int pickerY = getPickerY(pickerHeight);
             int svWidth = 100;
             int svHeight = 80;
             int svX = pickerX + 5;
@@ -426,7 +442,8 @@ public class ColorPickerWidget extends OptionWidget {
         
         Dim2i controlDim = getControlDim();
         int pickerX = controlDim.x();
-        int pickerY = dim.getLimitY() + 2;
+        int pickerHeight = 120;
+        int pickerY = getPickerY(pickerHeight);
         int svWidth = 100;
         int svHeight = 80;
         int svX = pickerX + 5;

@@ -61,6 +61,15 @@ public class OptionListWidget extends AbstractWidget {
     
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        renderWithoutOverlays(graphics, mouseX, mouseY, delta);
+        renderOverlays(graphics, mouseX, mouseY, delta);
+    }
+    
+    /**
+     * Renders the widget without overlays (dropdowns, popups).
+     * Use this when you need to render overlays separately on top of other elements.
+     */
+    public void renderWithoutOverlays(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         // Smooth scrolling
         if (scrollOffset != targetScrollOffset) {
             scrollOffset = Mth.lerp(SCROLL_SPEED, scrollOffset, targetScrollOffset);
@@ -98,8 +107,13 @@ public class OptionListWidget extends AbstractWidget {
         if (hasScrollbar()) {
             renderScrollbar(graphics, mouseX, mouseY);
         }
-        
-        // Render overlays (dropdowns, popups) on top of everything
+    }
+    
+    /**
+     * Renders overlays (dropdowns, popups) on top of everything.
+     * Call this after rendering other UI elements that should appear below.
+     */
+    public void renderOverlays(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         for (OptionWidget option : options) {
             option.renderOverlay(graphics, mouseX, mouseY, delta);
         }

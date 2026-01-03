@@ -244,7 +244,7 @@ public class EclipseConfigScreen extends Screen {
         
         // Render widgets
         categoryList.render(graphics, mouseX, mouseY, delta);
-        optionList.render(graphics, mouseX, mouseY, delta);
+        optionList.renderWithoutOverlays(graphics, mouseX, mouseY, delta);
         
         if (saveButton != null) {
             saveButton.render(graphics, mouseX, mouseY, delta);
@@ -253,6 +253,9 @@ public class EclipseConfigScreen extends Screen {
             resetButton.render(graphics, mouseX, mouseY, delta);
         }
         doneButton.render(graphics, mouseX, mouseY, delta);
+        
+        // Render overlays
+        optionList.renderOverlays(graphics, mouseX, mouseY, delta);
         
         // Render tooltip for hovered option
         renderOptionTooltip(graphics, mouseX, mouseY);

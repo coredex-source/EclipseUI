@@ -170,6 +170,29 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
         // Dropdown items are rendered in renderOverlay to appear on top of other widgets
     }
     
+    /**
+     * Determines if the dropdown should render upward (flip) to avoid clipping.
+     */
+    private boolean shouldFlipUpward() {
+        if (enumClass == null) return false;
+        
+        Dim2i controlDim = getControlDim();
+        int buttonHeight = theme.useVanillaWidgets() ? 20 : 16;
+        int itemHeight = theme.useVanillaWidgets() ? 20 : 14;
+        int buttonY = controlDim.getCenterY() - (buttonHeight / 2);
+        
+        E[] values = enumClass.getEnumConstants();
+        int dropdownHeight = values.length * itemHeight;
+        int dropdownY = buttonY + buttonHeight;
+        
+        // Get screen height
+        int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+        
+        // Check if dropdown would extend beyond the screen bottom
+        // Leave some margin (10 pixels)
+        return (dropdownY + dropdownHeight) > (screenHeight - 10);
+    }
+    
     @Override
     public void renderOverlay(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         if (!this.expanded || this.enumClass == null) return;
@@ -178,6 +201,7 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
         var font = Minecraft.getInstance().font;
         
         E[] values = enumClass.getEnumConstants();
+        boolean flipUpward = shouldFlipUpward();
         
         if (theme.useVanillaWidgets()) {
             // Vanilla style dropdown overlay
@@ -186,9 +210,9 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
             int buttonY = controlDim.getCenterY() - (buttonHeight / 2);
             int buttonWidth = controlDim.width() - 4;
             
-            int dropdownY = buttonY + buttonHeight;
             int itemHeight = 20;
             int dropdownHeight = values.length * itemHeight;
+            int dropdownY = flipUpward ? (buttonY - dropdownHeight) : (buttonY + buttonHeight);
             
             // Draw background using solid color (dark gray like vanilla)
             fillRect(graphics, buttonX, dropdownY, buttonWidth, dropdownHeight, 0xFF000000);
@@ -235,9 +259,9 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
             int buttonY = controlDim.getCenterY() - (buttonHeight / 2);
             int buttonWidth = controlDim.width() - 4;
             
-            int dropdownY = buttonY + buttonHeight;
             int itemHeight = 14;
             int dropdownHeight = values.length * itemHeight;
+            int dropdownY = flipUpward ? (buttonY - dropdownHeight) : (buttonY + buttonHeight);
             
             // Background
             fillRect(graphics, buttonX, dropdownY, buttonWidth, dropdownHeight, theme.backgroundColor());
@@ -283,7 +307,9 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
         // Check if clicking on dropdown items
         if (this.expanded && this.enumClass != null) {
             E[] values = enumClass.getEnumConstants();
-            int dropdownY = buttonY + buttonHeight;
+            int dropdownHeight = values.length * itemHeight;
+            boolean flipUpward = shouldFlipUpward();
+            int dropdownY = flipUpward ? (buttonY - dropdownHeight) : (buttonY + buttonHeight);
             
             for (int i = 0; i < values.length; i++) {
                 int itemY = dropdownY + i * itemHeight;
