@@ -1,0 +1,11 @@
+{
+  "eclipseui.toggle.on": "ON",
+  "eclipseui.toggle.off": "OFF",
+  "eclipseui.confirm.unsaved_changes.title": "Unsaved Changes",
+  "eclipseui.confirm.unsaved_changes.message": "You have unsaved changes. Discard them?",
+  "eclipseui.confirm.yes": "Discard",
+  "eclipseui.confirm.no": "Cancel",
+  "eclipseui.button.save": "Save",
+  "eclipseui.button.reset": "Reset",
+  "eclipseui.button.done": "Done"
+}

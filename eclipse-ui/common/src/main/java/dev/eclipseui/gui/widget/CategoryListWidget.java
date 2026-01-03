@@ -110,9 +110,8 @@ public class CategoryListWidget extends AbstractWidget {
                 int iconY = itemY + (ITEM_HEIGHT - ICON_SIZE) / 2;
                 
                 if (category.icon != null) {
-                    // TODO: Render icon texture
-                    // For now, draw a placeholder square
-                    fillRect(graphics, iconX, iconY, ICON_SIZE, ICON_SIZE, theme.accentPrimary());
+                    // Render icon texture
+                    graphics.blit(category.icon, iconX, iconY, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
                 }
                 
                 // Text

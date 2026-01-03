@@ -577,8 +577,7 @@ public class ConfigScreenBuilderImpl implements ConfigScreenBuilder {
     record SeparatorData() implements OptionBuilderData {
         @Override
         public OptionWidget build(Dim2i dim, ThemeData theme) {
-            // TODO: Implement separator widget
-            return null;
+            return new SeparatorWidget(dim, theme);
         }
     }
     
@@ -586,8 +585,7 @@ public class ConfigScreenBuilderImpl implements ConfigScreenBuilder {
     record LabelData(Component text) implements OptionBuilderData {
         @Override
         public OptionWidget build(Dim2i dim, ThemeData theme) {
-            // TODO: Implement label widget
-            return null;
+            return new LabelWidget(dim, theme, text);
         }
     }
 }

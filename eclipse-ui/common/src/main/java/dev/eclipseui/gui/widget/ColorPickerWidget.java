@@ -119,10 +119,15 @@ public class ColorPickerWidget extends OptionWidget {
         return Colors.argb(alpha, rgb[0], rgb[1], rgb[2]);
     }
     
+    private static final float INV_255 = 1f / 255f;
+    
+    // Reusable array to avoid allocations in hot path
+    private final float[] hsvTemp = new float[3];
+    
     private float[] rgbToHsv(int r, int g, int b) {
-        float rf = r / 255f;
-        float gf = g / 255f;
-        float bf = b / 255f;
+        float rf = r * INV_255;
+        float gf = g * INV_255;
+        float bf = b * INV_255;
         
         float max = Math.max(rf, Math.max(gf, bf));
         float min = Math.min(rf, Math.min(gf, bf));
@@ -133,35 +138,38 @@ public class ColorPickerWidget extends OptionWidget {
         if (max != 0) {
             s = delta / max;
         } else {
-            s = 0;
-            h = 0;
-            return new float[]{h, s, v};
+            hsvTemp[0] = 0; hsvTemp[1] = 0; hsvTemp[2] = 0;
+            return hsvTemp;
         }
         
-        if (delta == 0) {
-            h = 0;
-        } else if (rf == max) {
-            h = (gf - bf) / delta;
-        } else if (gf == max) {
-            h = 2 + (bf - rf) / delta;
-        } else {
-            h = 4 + (rf - gf) / delta;
+        if (delta != 0) {
+            if (rf == max) {
+                h = (gf - bf) / delta;
+            } else if (gf == max) {
+                h = 2 + (bf - rf) / delta;
+            } else {
+                h = 4 + (rf - gf) / delta;
+            }
+            h *= 60;
+            if (h < 0) h += 360;
         }
         
-        h *= 60;
-        if (h < 0) h += 360;
-        
-        return new float[]{h, s, v};
+        hsvTemp[0] = h; hsvTemp[1] = s; hsvTemp[2] = v;
+        return hsvTemp;
     }
+    
+    // Reusable array for RGB output to avoid allocations
+    private final int[] rgbTemp = new int[3];
     
     private int[] hsvToRgb(float h, float s, float v) {
         if (s == 0) {
             int gray = (int) (v * 255);
-            return new int[]{gray, gray, gray};
+            rgbTemp[0] = gray; rgbTemp[1] = gray; rgbTemp[2] = gray;
+            return rgbTemp;
         }
         
         h = h / 60f;
-        int i = (int) Math.floor(h);
+        int i = (int) h;  // floor for positive numbers
         float f = h - i;
         float p = v * (1 - s);
         float q = v * (1 - s * f);
@@ -177,9 +185,12 @@ public class ColorPickerWidget extends OptionWidget {
             default -> { r = v; g = p; b = q; }
         }
         
-        return new int[]{(int) (r * 255), (int) (g * 255), (int) (b * 255)};
+        rgbTemp[0] = (int) (r * 255);
+        rgbTemp[1] = (int) (g * 255);
+        rgbTemp[2] = (int) (b * 255);
+        return rgbTemp;
     }
-    
+
     @Override
     protected void renderControl(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         Dim2i controlDim = getControlDim();

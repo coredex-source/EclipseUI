@@ -54,11 +54,16 @@ public final class Colors {
     }
     
     public static int blend(int color1, int color2, float ratio) {
+        // Fast path for edge cases
+        if (ratio <= 0f) return color1;
+        if (ratio >= 1f) return color2;
+        
         float invRatio = 1.0f - ratio;
-        int a = (int) (getAlpha(color1) * invRatio + getAlpha(color2) * ratio);
-        int r = (int) (getRed(color1) * invRatio + getRed(color2) * ratio);
-        int g = (int) (getGreen(color1) * invRatio + getGreen(color2) * ratio);
-        int b = (int) (getBlue(color1) * invRatio + getBlue(color2) * ratio);
-        return fromARGB(a, r, g, b);
+        // Inline extraction to avoid method call overhead
+        int a = (int) (((color1 >> 24) & 0xFF) * invRatio + ((color2 >> 24) & 0xFF) * ratio);
+        int r = (int) (((color1 >> 16) & 0xFF) * invRatio + ((color2 >> 16) & 0xFF) * ratio);
+        int g = (int) (((color1 >> 8) & 0xFF) * invRatio + ((color2 >> 8) & 0xFF) * ratio);
+        int b = (int) ((color1 & 0xFF) * invRatio + (color2 & 0xFF) * ratio);
+        return ((a & 0xFF) << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
     }
 }

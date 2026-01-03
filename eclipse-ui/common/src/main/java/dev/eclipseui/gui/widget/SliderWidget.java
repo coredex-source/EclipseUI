@@ -32,6 +32,10 @@ public class SliderWidget extends OptionWidget {
     
     private boolean dragging = false;
     
+    // Cache for value text to avoid repeated string formatting
+    private double cachedValue = Double.NaN;
+    private Component cachedValueText = null;
+    
     public SliderWidget(Dim2i dim, ThemeData theme, Component name) {
         super(dim, theme, name);
     }
@@ -138,8 +142,16 @@ public class SliderWidget extends OptionWidget {
     
     private Component getValueText() {
         double value = getValue();
+        
+        // Return cached text if value hasn't changed
+        if (value == cachedValue && cachedValueText != null) {
+            return cachedValueText;
+        }
+        cachedValue = value;
+        
         if (this.formatter != null) {
-            return this.formatter.apply(value);
+            cachedValueText = this.formatter.apply(value);
+            return cachedValueText;
         }
         
         // Format based on step precision
@@ -152,7 +164,8 @@ public class SliderWidget extends OptionWidget {
             formatted = String.format("%.2f", value);
         }
         
-        return Component.literal(formatted + suffix);
+        cachedValueText = Component.literal(formatted + suffix);
+        return cachedValueText;
     }
     
     @Override

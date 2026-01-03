@@ -23,6 +23,7 @@ public class OptionListWidget extends AbstractWidget {
     private static final int SCROLLBAR_WIDTH = 6;
     private static final int ITEM_PADDING = 2;
     private static final float SCROLL_SPEED = 0.3f;
+    private static final double SCROLL_THRESHOLD = 0.5;
     
     public OptionListWidget(Dim2i dim, ThemeData theme) {
         super(dim, theme);
@@ -63,7 +64,7 @@ public class OptionListWidget extends AbstractWidget {
         // Smooth scrolling
         if (scrollOffset != targetScrollOffset) {
             scrollOffset = Mth.lerp(SCROLL_SPEED, scrollOffset, targetScrollOffset);
-            if (Math.abs(scrollOffset - targetScrollOffset) < 0.5) {
+            if (Math.abs(scrollOffset - targetScrollOffset) < SCROLL_THRESHOLD) {
                 scrollOffset = targetScrollOffset;
             }
         }

@@ -250,11 +250,45 @@ public abstract class AbstractWidget implements Renderable, GuiEventListener, Na
     }
     
     /**
-     * Fill a rounded rectangle (approximated with a regular rectangle for now).
+     * Fill a rounded rectangle with actual rounded corners.
+     * Uses a corner-cutting approach for pixel-perfect corners.
      */
     protected void fillRoundedRect(GuiGraphics graphics, int x, int y, int width, int height, int radius, int color) {
-        // For now, just fill a regular rectangle
-        // TODO: Implement actual rounded corners if needed
-        fillRect(graphics, x, y, width, height, color);
+        if (radius <= 0) {
+            fillRect(graphics, x, y, width, height, color);
+            return;
+        }
+        
+        // Clamp radius to half of the smallest dimension
+        radius = Math.min(radius, Math.min(width, height) / 2);
+        
+        // Main body (excluding corners)
+        // Center horizontal strip
+        fillRect(graphics, x + radius, y, width - 2 * radius, height, color);
+        // Left vertical strip
+        fillRect(graphics, x, y + radius, radius, height - 2 * radius, color);
+        // Right vertical strip
+        fillRect(graphics, x + width - radius, y + radius, radius, height - 2 * radius, color);
+        
+        // Draw corner pixels using squared distance comparison (avoids sqrt)
+        float radiusSquared = radius * radius;
+        for (int cx = 0; cx < radius; cx++) {
+            float dx = radius - cx - 0.5f;
+            float dxSquared = dx * dx;
+            for (int cy = 0; cy < radius; cy++) {
+                float dy = radius - cy - 0.5f;
+                // Compare squared distances to avoid sqrt
+                if (dxSquared + dy * dy <= radiusSquared) {
+                    // Top-left corner
+                    graphics.fill(x + cx, y + cy, x + cx + 1, y + cy + 1, color);
+                    // Top-right corner
+                    graphics.fill(x + width - cx - 1, y + cy, x + width - cx, y + cy + 1, color);
+                    // Bottom-left corner
+                    graphics.fill(x + cx, y + height - cy - 1, x + cx + 1, y + height - cy, color);
+                    // Bottom-right corner
+                    graphics.fill(x + width - cx - 1, y + height - cy - 1, x + width - cx, y + height - cy, color);
+                }
+            }
+        }
     }
 }

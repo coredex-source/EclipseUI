@@ -12,7 +12,7 @@ This guide explains how to integrate EclipseUI into your Minecraft mod for both 
 
 ## Adding the Dependency
 
-First, add the GitHub Packages repository and the EclipseUI dependency to your mod.
+EclipseUI is distributed as a single combined JAR that includes all modules (core, platform, and UI). Simply add one dependency to get everything you need.
 
 ### Fabric
 
@@ -36,18 +36,10 @@ repositories {
 
 ```kotlin
 dependencies {
-    // EclipseUI Core (required)
-    modImplementation("dev.eclipsecore:EclipseCore-fabric:1.0.0+mc1.21.10")
-    
-    // EclipseUI Platform (required for screen integration)
-    modImplementation("dev.eclipseui.platform:EclipsePlatform-fabric:1.0.0+mc1.21.10")
-    
-    // EclipseUI (main library)
+    // EclipseUI - Complete UI library (single JAR)
     modImplementation("dev.eclipseui:EclipseUI-fabric:1.0.0+mc1.21.10")
     
-    // Include in your mod JAR
-    include("dev.eclipsecore:EclipseCore-fabric:1.0.0+mc1.21.10")
-    include("dev.eclipseui.platform:EclipsePlatform-fabric:1.0.0+mc1.21.10")
+    // Include in your mod JAR (bundles the library with your mod)
     include("dev.eclipseui:EclipseUI-fabric:1.0.0+mc1.21.10")
 }
 ```
@@ -83,21 +75,22 @@ repositories {
 
 ```kotlin
 dependencies {
-    // EclipseUI Core (required)
-    implementation("dev.eclipsecore:EclipseCore-neoforge:1.0.0+mc1.21.10")
-    
-    // EclipseUI Platform (required for screen integration)
-    implementation("dev.eclipseui.platform:EclipsePlatform-neoforge:1.0.0+mc1.21.10")
-    
-    // EclipseUI (main library)
+    // EclipseUI - Complete UI library (single JAR)
     implementation("dev.eclipseui:EclipseUI-neoforge:1.0.0+mc1.21.10")
     
-    // Shadow/jar-in-jar (NeoForge approach)
-    jarJar("dev.eclipsecore:EclipseCore-neoforge:1.0.0+mc1.21.10")
-    jarJar("dev.eclipseui.platform:EclipsePlatform-neoforge:1.0.0+mc1.21.10")
+    // Include in your mod JAR (jar-in-jar)
     jarJar("dev.eclipseui:EclipseUI-neoforge:1.0.0+mc1.21.10")
 }
 ```
+
+### Manual Installation
+
+You can also download the JAR directly from [GitHub Releases](https://github.com/coredex-source/EclipseUI/releases) or the workflow artifacts:
+
+| Platform | File |
+|----------|------|
+| Fabric | `EclipseUI-fabric-{version}.jar` |
+| NeoForge | `EclipseUI-neoforge-{version}.jar` |
 
 ## Basic Usage
 
@@ -123,7 +116,7 @@ public class MyModConfig {
                 .name(Component.literal("General Settings"))
                 .toggle(toggle -> toggle
                     .name(Component.literal("Enable Feature"))
-                    .tooltip(Component.literal("Enables the main feature"))
+                    .description(Component.literal("Enables the main feature"))
                     .binding(() -> enableFeature, v -> enableFeature = v)
                     .defaultValue(true)
                 )
@@ -133,7 +126,7 @@ public class MyModConfig {
                     .bindingInt(() -> damageMultiplier, v -> damageMultiplier = v)
                     .defaultValue(10)
                 )
-                .textField(field -> field
+                .textInput(field -> field
                     .name(Component.literal("Player Name"))
                     .binding(() -> playerName, v -> playerName = v)
                     .defaultValue("Steve")
@@ -186,6 +179,8 @@ public static Screen createAdvancedConfigScreen(Screen parent) {
         // Gameplay Category
         .category(cat -> cat
             .name(Component.literal("Gameplay"))
+            .description(Component.literal("Game mechanics settings"))
+            
             .toggle(t -> t
                 .name(Component.literal("PvP Enabled"))
                 .binding(() -> Config.pvpEnabled, v -> Config.pvpEnabled = v)
@@ -202,27 +197,44 @@ public static Screen createAdvancedConfigScreen(Screen parent) {
         // Visual Category
         .category(cat -> cat
             .name(Component.literal("Visual"))
-            .dropdown(d -> d
-                .name(Component.literal("Particle Quality"))
-                .options("Low", "Medium", "High", "Ultra")
-                .binding(() -> Config.particleQuality, v -> Config.particleQuality = v)
-                .defaultValue("Medium")
+            .description(Component.literal("Visual appearance settings"))
+            
+            .separator()
+            .label(Component.literal("§lColors"))
+            
+            .colorPicker(c -> c
+                .name(Component.literal("Primary Color"))
+                .binding(() -> Config.primaryColor, v -> Config.primaryColor = v)
+                .defaultValue(0xFF5555FF)
+                .allowAlpha(false)
             )
             .colorPicker(c -> c
-                .name(Component.literal("UI Color"))
-                .binding(() -> Config.uiColor, v -> Config.uiColor = v)
-                .defaultValue(0xFF5733)
+                .name(Component.literal("Accent Color"))
+                .binding(() -> Config.accentColor, v -> Config.accentColor = v)
+                .defaultValue(0x80FF5555)
+                .allowAlpha(true)
+                .presets(0xFFFF0000, 0xFF00FF00, 0xFF0000FF)
             )
         )
         
         // Audio Category
         .category(cat -> cat
             .name(Component.literal("Audio"))
+            .description(Component.literal("Sound settings"))
+            
             .slider(s -> s
                 .name(Component.literal("Master Volume"))
                 .range(0, 100, 1)
                 .bindingInt(() -> Config.masterVolume, v -> Config.masterVolume = v)
                 .defaultValue(80)
+                .suffix("%")
+            )
+            
+            .<SoundMode>dropdown(d -> d
+                .name(Component.literal("Sound Mode"))
+                .enumClass(SoundMode.class)
+                .binding(() -> Config.soundMode, v -> Config.soundMode = v)
+                .defaultValue(SoundMode.STEREO)
             )
         )
         
@@ -305,9 +317,12 @@ Boolean on/off switch
 ```java
 .toggle(t -> t
     .name(Component.literal("Enable Feature"))
-    .tooltip(Component.literal("Description"))
+    .description(Component.literal("Description shown on hover"))
     .binding(() -> value, v -> value = v)
     .defaultValue(true)
+    .onText(Component.literal("ON"))    // Custom on text
+    .offText(Component.literal("OFF"))  // Custom off text
+    .requiresRestart(true)              // Show restart warning
 )
 ```
 
@@ -320,6 +335,7 @@ Numeric value selector with range
     .range(0, 100, 1)
     .bindingInt(() -> count, v -> count = v)
     .defaultValue(50)
+    .suffix("%")  // Add suffix to displayed value
 )
 
 // Double slider
@@ -328,27 +344,31 @@ Numeric value selector with range
     .range(0.0, 5.0, 0.1)
     .bindingDouble(() -> multiplier, v -> multiplier = v)
     .defaultValue(1.0)
+    .percentageFormat()  // Display as percentage (1.0 = 100%)
 )
 ```
 
-### Text Field
+### Text Input
 String input field
 ```java
-.textField(f -> f
+.textInput(f -> f
     .name(Component.literal("Server Name"))
     .binding(() -> serverName, v -> serverName = v)
     .defaultValue("My Server")
+    .maxLength(64)
+    .placeholder(Component.literal("Enter name..."))
 )
 ```
 
 ### Dropdown
-Selection from predefined options
+Selection from enum options
 ```java
-.dropdown(d -> d
+.<MyEnum>dropdown(d -> d
     .name(Component.literal("Difficulty"))
-    .options("Easy", "Normal", "Hard")
+    .enumClass(MyEnum.class)
     .binding(() -> difficulty, v -> difficulty = v)
-    .defaultValue("Normal")
+    .defaultValue(MyEnum.NORMAL)
+    .formatter(val -> Component.literal(val.getDisplayName()))  // Custom formatting
 )
 ```
 
@@ -359,7 +379,25 @@ Color selection widget (ARGB format)
     .name(Component.literal("Theme Color"))
     .binding(() -> color, v -> color = v)
     .defaultValue(0xFFFFFFFF)  // White
+    .allowAlpha(true)          // Enable transparency
+    .presets(                  // Preset color buttons
+        0xFFFF0000, 0xFF00FF00, 0xFF0000FF,
+        0xFFFFFF00, 0xFFFF00FF, 0xFF00FFFF
+    )
 )
+```
+
+### Separator
+Visual divider between options
+```java
+.separator()
+```
+
+### Label
+Section header or text label
+```java
+.label(Component.literal("§lSection Title"))
+.label(Component.literal("§7Muted description text"))
 ```
 
 ## Themes
@@ -374,13 +412,28 @@ Select a theme when building your config screen:
 .theme(Theme.MODERN)
 ```
 
+## Building from Source
+
+Clone the repository and build combined JARs:
+
+```bash
+git clone https://github.com/coredex-source/EclipseUI.git
+cd EclipseUI
+./gradlew buildAll
+```
+
+Combined JARs will be output to the `bin/` directory:
+- `bin/EclipseUI-fabric-{version}.jar`
+- `bin/EclipseUI-neoforge-{version}.jar`
+
 ## Tips
 
 1. **Keep categories focused** - Group related settings together
-2. **Add tooltips** - Help users understand what each option does
+2. **Add descriptions** - Help users understand what each option does
 3. **Use appropriate ranges** - For sliders, choose sensible min/max values
 4. **Save on close** - Use `.onSave()` to persist changes
 5. **Default values** - Always provide sensible defaults
+6. **Use separators and labels** - Organize options visually
 
 ## Support
 

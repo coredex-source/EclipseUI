@@ -189,15 +189,30 @@ public class EclipseConfigScreen extends Screen {
     
     @Override
     public void onClose() {
+        // Check for unsaved changes
+        if (optionList != null && optionList.hasModifiedOptions()) {
+            // Show confirmation dialog
+            this.minecraft.setScreen(new ConfirmationScreen(
+                this,
+                Component.translatable("eclipseui.confirm.unsaved_changes.title"),
+                Component.translatable("eclipseui.confirm.unsaved_changes.message"),
+                confirmed -> {
+                    if (confirmed) {
+                        if (onClose != null) {
+                            onClose.run();
+                        }
+                        this.minecraft.setScreen(parent);
+                    } else {
+                        this.minecraft.setScreen(this);
+                    }
+                }
+            ));
+            return;
+        }
+        
         if (onClose != null) {
             onClose.run();
         }
-        
-        // Check for unsaved changes
-        if (optionList != null && optionList.hasModifiedOptions()) {
-            // TODO: Show confirmation dialog
-        }
-        
         this.minecraft.setScreen(parent);
     }
     
@@ -258,6 +273,11 @@ public class EclipseConfigScreen extends Screen {
     }
     
     private void renderOptionTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+        // Quick bounds check before iterating
+        if (mouseX < SIDEBAR_WIDTH || mouseY < HEADER_HEIGHT || mouseY > this.height - FOOTER_HEIGHT) {
+            return;
+        }
+        
         for (OptionWidget option : optionList.getOptions()) {
             if (option.isHovered() && option.getDescription() != null) {
                 // Simple tooltip - draw as wrapped text

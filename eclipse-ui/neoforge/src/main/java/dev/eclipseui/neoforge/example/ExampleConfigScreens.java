@@ -237,7 +237,7 @@ public class ExampleConfigScreens {
                     .description(Component.literal("Main theme color used throughout the UI"))
                     .binding(() -> config.primaryColor, v -> config.primaryColor = v)
                     .defaultValue(0xFF5555FF)
-                    .showAlpha(false)
+                    .allowAlpha(false)
                 )
                 
                 .colorPicker(c -> c
@@ -245,7 +245,7 @@ public class ExampleConfigScreens {
                     .description(Component.literal("Accent color for highlights"))
                     .binding(() -> config.secondaryColor, v -> config.secondaryColor = v)
                     .defaultValue(0xFF55FF55)
-                    .showAlpha(false)
+                    .allowAlpha(false)
                 )
                 
                 .colorPicker(c -> c
@@ -253,7 +253,12 @@ public class ExampleConfigScreens {
                     .description(Component.literal("Color for important elements"))
                     .binding(() -> config.accentColor, v -> config.accentColor = v)
                     .defaultValue(0xFFFF5555)
-                    .showAlpha(true)
+                    .allowAlpha(true)
+                    .presets(
+                        0xFFFF0000, 0xFF00FF00, 0xFF0000FF,
+                        0xFFFFFF00, 0xFFFF00FF, 0xFF00FFFF,
+                        0xFFFFFFFF, 0xFF000000, 0xFF808080
+                    )
                 )
                 
                 .separator()
@@ -282,7 +287,150 @@ public class ExampleConfigScreens {
                     .binding(() -> config.customTitle, v -> config.customTitle = v)
                     .defaultValue("My Mod")
                     .maxLength(32)
-                    .placeholder("Enter title...")
+                    .placeholder(Component.literal("Enter title..."))
+                )
+            )
+            
+            // Widget Showcase Category - demonstrates ALL widgets
+            .category(cat -> cat
+                .name(Component.literal("Widget Showcase"))
+                .description(Component.literal("Demonstrates all available widget types"))
+                
+                .label(Component.literal("§e§lToggle Widgets"))
+                
+                .toggle(t -> t
+                    .name(Component.literal("Basic Toggle"))
+                    .description(Component.literal("A simple on/off toggle switch"))
+                    .binding(() -> config.enableMod, v -> config.enableMod = v)
+                    .defaultValue(true)
+                )
+                
+                .toggle(t -> t
+                    .name(Component.literal("Custom Labels Toggle"))
+                    .description(Component.literal("Toggle with custom ON/OFF text"))
+                    .binding(() -> config.showNotifications, v -> config.showNotifications = v)
+                    .defaultValue(true)
+                    .onText(Component.literal("Enabled"))
+                    .offText(Component.literal("Disabled"))
+                )
+                
+                .toggle(t -> t
+                    .name(Component.literal("Restart Required"))
+                    .description(Component.literal("This toggle requires a game restart to take effect"))
+                    .binding(() -> config.experimentalFeatures, v -> config.experimentalFeatures = v)
+                    .defaultValue(false)
+                    .requiresRestart(true)
+                )
+                
+                .separator()
+                .label(Component.literal("§b§lSlider Widgets"))
+                
+                .slider(s -> s
+                    .name(Component.literal("Integer Slider"))
+                    .description(Component.literal("Slider for whole numbers"))
+                    .range(0, 100, 1)
+                    .bindingInt(() -> config.masterVolume, v -> config.masterVolume = v)
+                    .defaultValue(100)
+                    .suffix("%")
+                )
+                
+                .slider(s -> s
+                    .name(Component.literal("Float Slider"))
+                    .description(Component.literal("Slider with decimal values"))
+                    .range(0.5, 2.0, 0.1)
+                    .bindingDouble(() -> config.movementSpeed, v -> config.movementSpeed = v)
+                    .defaultValue(1.0)
+                    .suffix("x")
+                )
+                
+                .slider(s -> s
+                    .name(Component.literal("Percentage Slider"))
+                    .description(Component.literal("Slider formatted as percentage"))
+                    .range(0.0, 2.0, 0.1)
+                    .bindingDouble(() -> config.brightness, v -> config.brightness = v)
+                    .defaultValue(1.0)
+                    .percentageFormat()
+                )
+                
+                .slider(s -> s
+                    .name(Component.literal("Large Range Slider"))
+                    .description(Component.literal("Slider with large step values"))
+                    .range(0, 240, 10)
+                    .bindingInt(() -> config.maxFps, v -> config.maxFps = v)
+                    .defaultValue(60)
+                    .suffix(" FPS")
+                )
+                
+                .separator()
+                .label(Component.literal("§a§lDropdown Widgets"))
+                
+                .<GraphicsQuality>dropdown(d -> d
+                    .name(Component.literal("Basic Dropdown"))
+                    .description(Component.literal("Simple enum dropdown selector"))
+                    .enumClass(GraphicsQuality.class)
+                    .binding(() -> config.graphicsQuality, v -> config.graphicsQuality = v)
+                    .defaultValue(GraphicsQuality.MEDIUM)
+                )
+                
+                .<SoundMode>dropdown(d -> d
+                    .name(Component.literal("Formatted Dropdown"))
+                    .description(Component.literal("Dropdown with custom text formatting"))
+                    .enumClass(SoundMode.class)
+                    .binding(() -> config.soundMode, v -> config.soundMode = v)
+                    .defaultValue(SoundMode.STEREO)
+                    .formatter(mode -> Component.literal("♪ " + mode.toString()))
+                )
+                
+                .separator()
+                .label(Component.literal("§d§lText Input Widgets"))
+                
+                .textInput(t -> t
+                    .name(Component.literal("Basic Text Input"))
+                    .description(Component.literal("Simple text input field"))
+                    .binding(() -> config.customTitle, v -> config.customTitle = v)
+                    .defaultValue("My Mod")
+                    .maxLength(64)
+                )
+                
+                .textInput(t -> t
+                    .name(Component.literal("With Placeholder"))
+                    .description(Component.literal("Text input with placeholder text"))
+                    .binding(() -> config.customTitle, v -> config.customTitle = v)
+                    .defaultValue("")
+                    .placeholder(Component.literal("Type something here..."))
+                    .maxLength(128)
+                )
+                
+                .separator()
+                .label(Component.literal("§c§lColor Picker Widgets"))
+                
+                .colorPicker(c -> c
+                    .name(Component.literal("RGB Color Picker"))
+                    .description(Component.literal("Color picker without alpha"))
+                    .binding(() -> config.primaryColor, v -> config.primaryColor = v)
+                    .defaultValue(0xFF5555FF)
+                    .allowAlpha(false)
+                )
+                
+                .colorPicker(c -> c
+                    .name(Component.literal("RGBA Color Picker"))
+                    .description(Component.literal("Color picker with alpha/transparency"))
+                    .binding(() -> config.accentColor, v -> config.accentColor = v)
+                    .defaultValue(0x80FF5555)
+                    .allowAlpha(true)
+                )
+                
+                .colorPicker(c -> c
+                    .name(Component.literal("With Presets"))
+                    .description(Component.literal("Color picker with preset colors"))
+                    .binding(() -> config.secondaryColor, v -> config.secondaryColor = v)
+                    .defaultValue(0xFF55FF55)
+                    .allowAlpha(false)
+                    .presets(
+                        0xFFFF0000, 0xFFFF7F00, 0xFFFFFF00,
+                        0xFF00FF00, 0xFF0000FF, 0xFF8B00FF,
+                        0xFFFFFFFF, 0xFF808080, 0xFF000000
+                    )
                 )
             )
             

@@ -87,14 +87,19 @@ public final class Colors {
      * @param factor 0.0 = color1, 1.0 = color2
      */
     public static int blend(int color1, int color2, float factor) {
+        // Fast path for no blending needed
+        if (factor <= 0f) return color1;
+        if (factor >= 1f) return color2;
+        
         float inverse = 1.0f - factor;
         
-        int a = (int) (getAlpha(color1) * inverse + getAlpha(color2) * factor);
-        int r = (int) (getRed(color1) * inverse + getRed(color2) * factor);
-        int g = (int) (getGreen(color1) * inverse + getGreen(color2) * factor);
-        int b = (int) (getBlue(color1) * inverse + getBlue(color2) * factor);
+        // Inline component extraction to avoid method call overhead
+        int a = (int) (((color1 >> 24) & 0xFF) * inverse + ((color2 >> 24) & 0xFF) * factor);
+        int r = (int) (((color1 >> 16) & 0xFF) * inverse + ((color2 >> 16) & 0xFF) * factor);
+        int g = (int) (((color1 >> 8) & 0xFF) * inverse + ((color2 >> 8) & 0xFF) * factor);
+        int b = (int) ((color1 & 0xFF) * inverse + (color2 & 0xFF) * factor);
         
-        return argb(a, r, g, b);
+        return (a << 24) | (r << 16) | (g << 8) | b;
     }
     
     /**
