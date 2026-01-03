@@ -2,19 +2,8 @@ plugins {
     id("net.neoforged.moddev")
 }
 
-repositories {
-    maven("https://maven.parchmentmc.org")
-}
-
 neoForge {
     version = BuildConfig.NEOFORGE_VERSION
-    
-    parchment {
-        if (BuildConfig.USE_PARCHMENT) {
-            minecraftVersion = BuildConfig.MINECRAFT_VERSION_BUILD
-            mappingsVersion = BuildConfig.PARCHMENT_VERSION
-        }
-    }
     
     runs {
         create("client") {

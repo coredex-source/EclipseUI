@@ -181,9 +181,9 @@ public class SliderWidget extends OptionWidget {
             int sliderY = controlDim.getCenterY() - (sliderHeight / 2);
             
             // Draw vanilla button background using sprite
-            net.minecraft.resources.ResourceLocation sprite = this.enabled 
-                ? net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button")
-                : net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button_disabled");
+            net.minecraft.resources.Identifier sprite = this.enabled 
+                ? net.minecraft.resources.Identifier.withDefaultNamespace("widget/button")
+                : net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_disabled");
             graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, sprite, sliderX, sliderY, sliderWidth, sliderHeight);
             
             // Draw slider handle
@@ -192,7 +192,7 @@ public class SliderWidget extends OptionWidget {
             int handleX = sliderX + 4 + (int) ((sliderWidth - 8 - handleWidth) * progress);
             
             // Draw highlighted section under handle using a lighter button sprite
-            net.minecraft.resources.ResourceLocation handleSprite = net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button_highlighted");
+            net.minecraft.resources.Identifier handleSprite = net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_highlighted");
             graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, handleSprite, handleX, sliderY, handleWidth, sliderHeight);
             
             // Draw value text centered with shadow

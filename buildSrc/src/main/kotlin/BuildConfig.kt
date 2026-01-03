@@ -30,10 +30,6 @@ object BuildConfig {
     val NEOFORGE_VERSION: String = props.getProperty("neoforge_version")
     val NEOFORGE_MODDEV_VERSION: String = props.getProperty("neoforge_moddev_version")
     
-    // Parchment mappings
-    val PARCHMENT_VERSION: String = props.getProperty("parchment_version")
-    val USE_PARCHMENT: Boolean = props.getProperty("use_parchment").toBoolean()
-    
     // Build version string
     fun getVersionString(): String {
         return "$MOD_VERSION+mc$MINECRAFT_VERSION_BUILD"

@@ -110,9 +110,9 @@ public class ToggleWidget extends OptionWidget {
             int buttonY = controlDim.getCenterY() - (buttonHeight / 2);
             
             // Draw vanilla button using sprites
-            net.minecraft.resources.ResourceLocation sprite = this.enabled 
-                ? net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button")
-                : net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button_disabled");
+            net.minecraft.resources.Identifier sprite = this.enabled 
+                ? net.minecraft.resources.Identifier.withDefaultNamespace("widget/button")
+                : net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_disabled");
             graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, sprite, buttonX, buttonY, buttonWidth, buttonHeight);
             
             // Draw text centered with shadow

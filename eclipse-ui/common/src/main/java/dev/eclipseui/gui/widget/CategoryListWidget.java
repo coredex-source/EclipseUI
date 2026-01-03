@@ -5,7 +5,7 @@ import dev.eclipseui.util.Dim2i;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class CategoryListWidget extends AbstractWidget {
         super(dim, theme);
     }
     
-    public void addCategory(Component name, @Nullable ResourceLocation icon, @Nullable Component description) {
+    public void addCategory(Component name, @Nullable Identifier icon, @Nullable Component description) {
         categories.add(new CategoryEntry(name, icon, description));
     }
     
@@ -79,10 +79,10 @@ public class CategoryListWidget extends AbstractWidget {
             if (theme.useVanillaWidgets()) {
                 // Vanilla style - use button sprites for selected/hovered
                 if (isSelected) {
-                    net.minecraft.resources.ResourceLocation sprite = net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button");
+                    net.minecraft.resources.Identifier sprite = net.minecraft.resources.Identifier.withDefaultNamespace("widget/button");
                     graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, sprite, dim.x() + 2, itemY + 1, dim.width() - 4, ITEM_HEIGHT - 2);
                 } else if (isHovered) {
-                    net.minecraft.resources.ResourceLocation sprite = net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button_highlighted");
+                    net.minecraft.resources.Identifier sprite = net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_highlighted");
                     graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, sprite, dim.x() + 2, itemY + 1, dim.width() - 4, ITEM_HEIGHT - 2);
                 }
                 
@@ -160,7 +160,7 @@ public class CategoryListWidget extends AbstractWidget {
     
     public record CategoryEntry(
         Component name,
-        @Nullable ResourceLocation icon,
+        @Nullable Identifier icon,
         @Nullable Component description
     ) {}
 }

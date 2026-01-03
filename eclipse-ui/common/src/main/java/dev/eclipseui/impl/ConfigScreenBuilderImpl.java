@@ -8,7 +8,7 @@ import dev.eclipseui.gui.widget.*;
 import dev.eclipseui.util.Dim2i;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -143,7 +143,7 @@ public class ConfigScreenBuilderImpl implements ConfigScreenBuilder {
     public static class CategoryBuilderImpl implements CategoryBuilder {
         
         private Component name = Component.literal("Category");
-        private @Nullable ResourceLocation icon;
+        private @Nullable Identifier icon;
         private @Nullable Component description;
         private final List<OptionBuilderData> options = new ArrayList<>();
         
@@ -160,7 +160,7 @@ public class ConfigScreenBuilderImpl implements ConfigScreenBuilder {
         }
         
         @Override
-        public CategoryBuilder icon(ResourceLocation icon) {
+        public CategoryBuilder icon(Identifier icon) {
             this.icon = icon;
             return this;
         }

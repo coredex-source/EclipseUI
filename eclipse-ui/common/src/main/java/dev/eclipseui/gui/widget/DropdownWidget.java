@@ -127,10 +127,10 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
             int buttonWidth = controlDim.width() - 4;
             
             // Draw vanilla button using sprites
-            net.minecraft.resources.ResourceLocation sprite = this.enabled 
-                ? (this.hovered ? net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button_highlighted") 
-                    : net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button"))
-                : net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button_disabled");
+            net.minecraft.resources.Identifier sprite = this.enabled 
+                ? (this.hovered ? net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_highlighted") 
+                    : net.minecraft.resources.Identifier.withDefaultNamespace("widget/button"))
+                : net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_disabled");
             graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, sprite, buttonX, buttonY, buttonWidth, buttonHeight);
             
             // Draw current value centered with shadow
@@ -231,11 +231,11 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
                 if (isHovered) {
                     this.hoveredIndex = i;
                     // Use vanilla button highlighted sprite for hovered items
-                    net.minecraft.resources.ResourceLocation sprite = net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button_highlighted");
+                    net.minecraft.resources.Identifier sprite = net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_highlighted");
                     graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, sprite, buttonX, itemY, buttonWidth, itemHeight);
                 } else if (isSelected) {
                     // Use regular button for selected
-                    net.minecraft.resources.ResourceLocation sprite = net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button");
+                    net.minecraft.resources.Identifier sprite = net.minecraft.resources.Identifier.withDefaultNamespace("widget/button");
                     graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, sprite, buttonX, itemY, buttonWidth, itemHeight);
                 } else {
                     // Draw dark background for unselected items

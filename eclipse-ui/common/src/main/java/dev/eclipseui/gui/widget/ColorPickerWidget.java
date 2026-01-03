@@ -206,9 +206,9 @@ public class ColorPickerWidget extends OptionWidget {
         
         if (theme.useVanillaWidgets()) {
             // Draw button background first
-            net.minecraft.resources.ResourceLocation sprite = this.hovered 
-                ? net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button_highlighted")
-                : net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button");
+            net.minecraft.resources.Identifier sprite = this.hovered 
+                ? net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_highlighted")
+                : net.minecraft.resources.Identifier.withDefaultNamespace("widget/button");
             graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, sprite, previewX, previewY, previewSize, previewSize);
             // Draw color swatch inside with 2px padding
             fillRect(graphics, previewX + 2, previewY + 2, previewSize - 4, previewSize - 4, color);

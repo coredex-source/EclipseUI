@@ -8,7 +8,7 @@ import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Consumer;
 
@@ -18,9 +18,9 @@ import java.util.function.Consumer;
 public class FlatButtonWidget extends AbstractWidget {
     
     // Vanilla button sprite locations
-    private static final ResourceLocation BUTTON_SPRITE = ResourceLocation.withDefaultNamespace("widget/button");
-    private static final ResourceLocation BUTTON_DISABLED_SPRITE = ResourceLocation.withDefaultNamespace("widget/button_disabled");
-    private static final ResourceLocation BUTTON_HIGHLIGHTED_SPRITE = ResourceLocation.withDefaultNamespace("widget/button_highlighted");
+    private static final Identifier BUTTON_SPRITE = Identifier.withDefaultNamespace("widget/button");
+    private static final Identifier BUTTON_DISABLED_SPRITE = Identifier.withDefaultNamespace("widget/button_disabled");
+    private static final Identifier BUTTON_HIGHLIGHTED_SPRITE = Identifier.withDefaultNamespace("widget/button_highlighted");
     
     private Component text;
     private Consumer<FlatButtonWidget> onClick;
@@ -56,7 +56,7 @@ public class FlatButtonWidget extends AbstractWidget {
         var font = Minecraft.getInstance().font;
         
         // Select sprite based on state
-        ResourceLocation sprite;
+        Identifier sprite;
         int textColor;
         if (!this.enabled) {
             sprite = BUTTON_DISABLED_SPRITE;

@@ -352,7 +352,7 @@ public class EclipseConfigScreen extends Screen {
      */
     public record CategoryData(
         Component name,
-        @Nullable net.minecraft.resources.ResourceLocation icon,
+        @Nullable net.minecraft.resources.Identifier icon,
         @Nullable Component description,
         List<OptionWidget> options
     ) {
@@ -360,7 +360,7 @@ public class EclipseConfigScreen extends Screen {
             this(name, null, null, new ArrayList<>());
         }
         
-        public CategoryData(Component name, @Nullable net.minecraft.resources.ResourceLocation icon) {
+        public CategoryData(Component name, @Nullable net.minecraft.resources.Identifier icon) {
             this(name, icon, null, new ArrayList<>());
         }
     }

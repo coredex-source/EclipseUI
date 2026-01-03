@@ -3,19 +3,12 @@ plugins {
 }
 
 repositories {
-    maven("https://maven.parchmentmc.org")
     maven("https://maven.terraformersmc.com/")
 }
 
 dependencies {
     minecraft("com.mojang:minecraft:${BuildConfig.MINECRAFT_VERSION_BUILD}")
-    
-    mappings(loom.layered {
-        officialMojangMappings()
-        if (BuildConfig.USE_PARCHMENT) {
-            parchment("org.parchmentmc.data:parchment-${BuildConfig.MINECRAFT_VERSION_BUILD}:${BuildConfig.PARCHMENT_VERSION}@zip")
-        }
-    })
+    mappings(loom.officialMojangMappings())
     
     modImplementation("net.fabricmc:fabric-loader:${BuildConfig.FABRIC_LOADER_VERSION}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${BuildConfig.FABRIC_API_VERSION}")
