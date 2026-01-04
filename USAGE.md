@@ -31,14 +31,14 @@ repositories {
 ```kotlin
 dependencies {
     // EclipseUI - Complete UI library (single JAR)
-    modImplementation("com.github.coredex-source:EclipseUI-fabric:v1.0.0")
+    modImplementation("com.github.coredex-source.EclipseUI:EclipseUI-fabric:v1.0.2")
     
     // Include in your mod JAR (bundles the library with your mod)
-    include("com.github.coredex-source:EclipseUI-fabric:v1.0.0")
+    include("com.github.coredex-source.EclipseUI:EclipseUI-fabric:v1.0.2")
 }
 ```
 
-> **Note:** Replace `v1.0.0` with the version tag you want to use. You can also use a commit hash or `main-SNAPSHOT` for the latest build.
+> **Note:** Replace `v1.0.2` with the version tag you want to use. You can also use a commit hash or `main-SNAPSHOT` for the latest build.
 
 ### NeoForge
 
@@ -55,10 +55,10 @@ repositories {
 ```kotlin
 dependencies {
     // EclipseUI - Complete UI library (single JAR)
-    implementation("com.github.coredex-source:EclipseUI-neoforge:v1.0.0")
+    implementation("com.github.coredex-source.EclipseUI:EclipseUI-neoforge:v1.0.2")
     
     // Include in your mod JAR (jar-in-jar)
-    jarJar("com.github.coredex-source:EclipseUI-neoforge:v1.0.0")
+    jarJar("com.github.coredex-source.EclipseUI:EclipseUI-neoforge:v1.0.2")
 }
 ```
 

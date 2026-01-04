@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "eclipseui_testmod",
+  "version": "${version}",
+  "name": "EclipseUI TestMod",
+  "description": "Test mod demonstrating EclipseUI library integration",
+  "authors": ["coredex-source"],
+  "contact": {
+    "homepage": "https://github.com/coredex-source/EclipseUI",
+    "sources": "https://github.com/coredex-source/EclipseUI"
+  },
+  "license": "MIT",
+  "icon": "assets/eclipseui_testmod/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.eclipseui.testmod.fabric.TestModFabric"
+    ],
+    "modmenu": [
+      "dev.eclipseui.testmod.fabric.ModMenuIntegration"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${fabric_loader_version}",
+    "minecraft": ">=${minecraft_version}",
+    "java": ">=21",
+    "eclipseui": "*"
+  },
+  "recommends": {
+    "modmenu": "*"
+  }
+}
