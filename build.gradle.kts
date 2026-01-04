@@ -1,6 +1,7 @@
 // Root build file - subprojects are configured via buildSrc
 plugins {
     java
+    `maven-publish`
 }
 
 val binDir = layout.projectDirectory.dir("bin")
@@ -258,4 +259,27 @@ tasks.register("buildAll") {
     description = "Builds all modules and creates combined JARs in bin folder"
     
     dependsOn("build", "copyToBin")
+}
+
+// Publishing for JitPack
+publishing {
+    publications {
+        create<MavenPublication>("fabric") {
+            groupId = "com.github.coredex-source.EclipseUI"
+            artifactId = "EclipseUI-fabric"
+            version = BuildConfig.getVersionString()
+            
+            artifact(tasks.named("combinedFabricJar"))
+            artifact(tasks.named("combinedFabricSourcesJar"))
+        }
+        
+        create<MavenPublication>("neoforge") {
+            groupId = "com.github.coredex-source.EclipseUI"
+            artifactId = "EclipseUI-neoforge"
+            version = BuildConfig.getVersionString()
+            
+            artifact(tasks.named("combinedNeoForgeJar"))
+            artifact(tasks.named("combinedNeoForgeSourcesJar"))
+        }
+    }
 }
