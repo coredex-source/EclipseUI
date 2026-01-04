@@ -24,10 +24,10 @@ repositories {
 
 dependencies {
     // Fabric
-    modImplementation("com.github.coredex-source.EclipseUI:EclipseUI-fabric:v1.0.0")
+    modImplementation("com.github.coredex-source:EclipseUI-fabric:v1.0.0")
     
     // NeoForge
-    implementation("com.github.coredex-source.EclipseUI:EclipseUI-neoforge:v1.0.0")
+    implementation("com.github.coredex-source:EclipseUI-neoforge:v1.0.0")
 }
 ```
 

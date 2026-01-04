@@ -265,21 +265,33 @@ tasks.register("buildAll") {
 publishing {
     publications {
         create<MavenPublication>("fabric") {
-            groupId = "com.github.coredex-source.EclipseUI"
+            groupId = "com.github.coredex-source"
             artifactId = "EclipseUI-fabric"
-            version = BuildConfig.getVersionString()
+            version = project.version.toString()
             
             artifact(tasks.named("combinedFabricJar"))
             artifact(tasks.named("combinedFabricSourcesJar"))
+            
+            pom {
+                name.set("EclipseUI Fabric")
+                description.set("A modern, themeable configuration UI library for Minecraft mods (Fabric)")
+                url.set("https://github.com/coredex-source/EclipseUI")
+            }
         }
         
         create<MavenPublication>("neoforge") {
-            groupId = "com.github.coredex-source.EclipseUI"
+            groupId = "com.github.coredex-source"
             artifactId = "EclipseUI-neoforge"
-            version = BuildConfig.getVersionString()
+            version = project.version.toString()
             
             artifact(tasks.named("combinedNeoForgeJar"))
             artifact(tasks.named("combinedNeoForgeSourcesJar"))
+            
+            pom {
+                name.set("EclipseUI NeoForge")
+                description.set("A modern, themeable configuration UI library for Minecraft mods (NeoForge)")
+                url.set("https://github.com/coredex-source/EclipseUI")
+            }
         }
     }
 }
