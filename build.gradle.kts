@@ -1,14 +1,12 @@
 // Root build file - subprojects are configured via buildSrc
 plugins {
     java
-    `maven-publish`
 }
 
 val binDir = layout.projectDirectory.dir("bin")
 
 subprojects {
     apply(plugin = "java")
-    apply(plugin = "maven-publish")
     
     java {
         toolchain {
@@ -24,51 +22,6 @@ subprojects {
     
     group = BuildConfig.MOD_GROUP
     version = BuildConfig.getVersionString()
-    
-    publishing {
-        publications {
-            create<MavenPublication>("mavenJava") {
-                from(components["java"])
-                
-                pom {
-                    name.set(BuildConfig.MOD_NAME)
-                    description.set(BuildConfig.MOD_DESCRIPTION)
-                    url.set("https://github.com/coredex-source/EclipseUI")
-                    
-                    licenses {
-                        license {
-                            name.set(BuildConfig.MOD_LICENSE)
-                            url.set("https://opensource.org/licenses/MIT")
-                        }
-                    }
-                    
-                    developers {
-                        developer {
-                            id.set(BuildConfig.MOD_AUTHOR)
-                            name.set(BuildConfig.MOD_AUTHOR)
-                        }
-                    }
-                    
-                    scm {
-                        connection.set("scm:git:git://github.com/coredex-source/EclipseUI.git")
-                        developerConnection.set("scm:git:ssh://github.com/coredex-source/EclipseUI.git")
-                        url.set("https://github.com/coredex-source/EclipseUI")
-                    }
-                }
-            }
-        }
-        
-        repositories {
-            maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/coredex-source/EclipseUI")
-                credentials {
-                    username = System.getenv("GITHUB_ACTOR")
-                    password = System.getenv("GITHUB_TOKEN")
-                }
-            }
-        }
-    }
 }
 
 // Combined JAR tasks for Fabric
@@ -305,78 +258,4 @@ tasks.register("buildAll") {
     description = "Builds all modules and creates combined JARs in bin folder"
     
     dependsOn("build", "copyToBin")
-}
-
-// Publishing for combined JARs
-publishing {
-    publications {
-        create<MavenPublication>("fabricCombined") {
-            groupId = BuildConfig.MOD_GROUP
-            artifactId = "EclipseUI-fabric"
-            version = BuildConfig.getVersionString()
-            
-            artifact(tasks.named("combinedFabricJar"))
-            artifact(tasks.named("combinedFabricSourcesJar"))
-            
-            pom {
-                name.set("${BuildConfig.MOD_NAME} (Fabric)")
-                description.set(BuildConfig.MOD_DESCRIPTION)
-                url.set("https://github.com/coredex-source/EclipseUI")
-                
-                licenses {
-                    license {
-                        name.set(BuildConfig.MOD_LICENSE)
-                        url.set("https://opensource.org/licenses/MIT")
-                    }
-                }
-                
-                developers {
-                    developer {
-                        id.set(BuildConfig.MOD_AUTHOR)
-                        name.set(BuildConfig.MOD_AUTHOR)
-                    }
-                }
-            }
-        }
-        
-        create<MavenPublication>("neoforgeCombined") {
-            groupId = BuildConfig.MOD_GROUP
-            artifactId = "EclipseUI-neoforge"
-            version = BuildConfig.getVersionString()
-            
-            artifact(tasks.named("combinedNeoForgeJar"))
-            artifact(tasks.named("combinedNeoForgeSourcesJar"))
-            
-            pom {
-                name.set("${BuildConfig.MOD_NAME} (NeoForge)")
-                description.set(BuildConfig.MOD_DESCRIPTION)
-                url.set("https://github.com/coredex-source/EclipseUI")
-                
-                licenses {
-                    license {
-                        name.set(BuildConfig.MOD_LICENSE)
-                        url.set("https://opensource.org/licenses/MIT")
-                    }
-                }
-                
-                developers {
-                    developer {
-                        id.set(BuildConfig.MOD_AUTHOR)
-                        name.set(BuildConfig.MOD_AUTHOR)
-                    }
-                }
-            }
-        }
-    }
-    
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/coredex-source/EclipseUI")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
 }

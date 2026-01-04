@@ -19,21 +19,15 @@ Add EclipseUI to your mod by following the [Usage Guide](USAGE.md).
 
 ```kotlin
 repositories {
-    maven {
-        url = uri("https://maven.pkg.github.com/coredex-source/EclipseUI")
-        credentials {
-            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
-            password = project.findProperty("gpr.token") as String? ?: System.getenv("GITHUB_TOKEN")
-        }
-    }
+    maven("https://jitpack.io")
 }
 
 dependencies {
     // Fabric
-    modImplementation("dev.eclipseui:EclipseUI-fabric:1.0.0+mc1.21.10")
+    modImplementation("com.github.coredex-source.EclipseUI:EclipseUI-fabric:v1.0.0")
     
     // NeoForge
-    implementation("dev.eclipseui:EclipseUI-neoforge:1.0.0+mc1.21.10")
+    implementation("com.github.coredex-source.EclipseUI:EclipseUI-neoforge:v1.0.0")
 }
 ```
 

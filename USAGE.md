@@ -18,17 +18,11 @@ EclipseUI is distributed as a single combined JAR that includes all modules (cor
 
 #### Step 1: Add the repository
 
-In your `build.gradle` or `build.gradle.kts`, add the GitHub Packages repository:
+In your `build.gradle` or `build.gradle.kts`, add the JitPack repository:
 
 ```kotlin
 repositories {
-    maven {
-        url = uri("https://maven.pkg.github.com/coredex-source/EclipseUI")
-        credentials {
-            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
-            password = project.findProperty("gpr.token") as String? ?: System.getenv("GITHUB_TOKEN")
-        }
-    }
+    maven("https://jitpack.io")
 }
 ```
 
@@ -37,23 +31,14 @@ repositories {
 ```kotlin
 dependencies {
     // EclipseUI - Complete UI library (single JAR)
-    modImplementation("dev.eclipseui:EclipseUI-fabric:1.0.0+mc1.21.10")
+    modImplementation("com.github.coredex-source.EclipseUI:EclipseUI-fabric:v1.0.0")
     
     // Include in your mod JAR (bundles the library with your mod)
-    include("dev.eclipseui:EclipseUI-fabric:1.0.0+mc1.21.10")
+    include("com.github.coredex-source.EclipseUI:EclipseUI-fabric:v1.0.0")
 }
 ```
 
-#### Step 3: Configure GitHub authentication
-
-Create a `gradle.properties` file in your project root or `~/.gradle/` directory:
-
-```properties
-gpr.user=YOUR_GITHUB_USERNAME
-gpr.token=YOUR_GITHUB_TOKEN
-```
-
-> **Note:** You'll need a GitHub Personal Access Token with `read:packages` permission. Generate one at: https://github.com/settings/tokens
+> **Note:** Replace `v1.0.0` with the version tag you want to use. You can also use a commit hash or `main-SNAPSHOT` for the latest build.
 
 ### NeoForge
 
@@ -61,13 +46,7 @@ gpr.token=YOUR_GITHUB_TOKEN
 
 ```kotlin
 repositories {
-    maven {
-        url = uri("https://maven.pkg.github.com/coredex-source/EclipseUI")
-        credentials {
-            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
-            password = project.findProperty("gpr.token") as String? ?: System.getenv("GITHUB_TOKEN")
-        }
-    }
+    maven("https://jitpack.io")
 }
 ```
 
@@ -76,10 +55,10 @@ repositories {
 ```kotlin
 dependencies {
     // EclipseUI - Complete UI library (single JAR)
-    implementation("dev.eclipseui:EclipseUI-neoforge:1.0.0+mc1.21.10")
+    implementation("com.github.coredex-source.EclipseUI:EclipseUI-neoforge:v1.0.0")
     
     // Include in your mod JAR (jar-in-jar)
-    jarJar("dev.eclipseui:EclipseUI-neoforge:1.0.0+mc1.21.10")
+    jarJar("com.github.coredex-source.EclipseUI:EclipseUI-neoforge:v1.0.0")
 }
 ```
 
