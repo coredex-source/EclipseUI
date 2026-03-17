@@ -1,20 +1,19 @@
 plugins {
-    id("fabric-loom")
+    id("net.fabricmc.fabric-loom")
 }
 
 group = "dev.eclipseplatform"
 
 dependencies {
     minecraft("com.mojang:minecraft:${BuildConfig.MINECRAFT_VERSION_BUILD}")
-    mappings(loom.officialMojangMappings())
     
-    modImplementation("net.fabricmc:fabric-loader:${BuildConfig.FABRIC_LOADER_VERSION}")
+    implementation("net.fabricmc:fabric-loader:${BuildConfig.FABRIC_LOADER_VERSION}")
     
     // Depend on EclipseCore (separate jar)
-    implementation(project(path = ":eclipse-core:common", configuration = "namedElements"))
+    implementation(project(":eclipse-core:common"))
     
     // Include common module
-    implementation(project(path = ":eclipse-platform:common", configuration = "namedElements"))
+    implementation(project(":eclipse-platform:common"))
     include(project(":eclipse-platform:common"))
 }
 
@@ -48,10 +47,12 @@ tasks.jar {
     archiveClassifier.set("")
 }
 
-tasks.remapJar {
-    archiveBaseName.set("EclipsePlatform")
-    archiveVersion.set("${BuildConfig.MOD_VERSION}-fabric-${BuildConfig.MINECRAFT_VERSION_BUILD}")
-    archiveClassifier.set("")
+tasks.configureEach {
+    if (name == "remapJar" && this is org.gradle.jvm.tasks.Jar) {
+        archiveBaseName.set("EclipsePlatform")
+        archiveVersion.set("${BuildConfig.MOD_VERSION}-fabric-${BuildConfig.MINECRAFT_VERSION_BUILD}")
+        archiveClassifier.set("")
+    }
 }
 
 tasks.named<Jar>("sourcesJar") {
@@ -60,8 +61,10 @@ tasks.named<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
 }
 
-tasks.named("remapSourcesJar") {
-    (this as org.gradle.jvm.tasks.Jar).archiveBaseName.set("EclipsePlatform")
-    (this as org.gradle.jvm.tasks.Jar).archiveVersion.set("${BuildConfig.MOD_VERSION}-fabric-${BuildConfig.MINECRAFT_VERSION_BUILD}")
-    (this as org.gradle.jvm.tasks.Jar).archiveClassifier.set("sources")
+tasks.configureEach {
+    if (name == "remapSourcesJar" && this is org.gradle.jvm.tasks.Jar) {
+        archiveBaseName.set("EclipsePlatform")
+        archiveVersion.set("${BuildConfig.MOD_VERSION}-fabric-${BuildConfig.MINECRAFT_VERSION_BUILD}")
+        archiveClassifier.set("sources")
+    }
 }

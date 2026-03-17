@@ -1,5 +1,5 @@
 plugins {
-    id("fabric-loom")
+    id("net.fabricmc.fabric-loom")
 }
 
 repositories {
@@ -8,21 +8,20 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:${BuildConfig.MINECRAFT_VERSION_BUILD}")
-    mappings(loom.officialMojangMappings())
     
-    modImplementation("net.fabricmc:fabric-loader:${BuildConfig.FABRIC_LOADER_VERSION}")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${BuildConfig.FABRIC_API_VERSION}")
+    implementation("net.fabricmc:fabric-loader:${BuildConfig.FABRIC_LOADER_VERSION}")
+    implementation("net.fabricmc.fabric-api:fabric-api:${BuildConfig.FABRIC_API_VERSION}")
     
     // ModMenu integration
-    modImplementation("com.terraformersmc:modmenu:17.0.0-alpha.1")
+    implementation("com.terraformersmc:modmenu:18.0.0-alpha.5")
     
     // Depend on EclipseCore and EclipsePlatform (separate jars in mods folder)
     // Use common modules for compilation, fabric modules provide the runtime jars
-    implementation(project(path = ":eclipse-core:common", configuration = "namedElements"))
-    implementation(project(path = ":eclipse-platform:common", configuration = "namedElements"))
+    implementation(project(":eclipse-core:common"))
+    implementation(project(":eclipse-platform:common"))
     
     // Include eclipse-ui:common classes in this jar
-    implementation(project(path = ":eclipse-ui:common", configuration = "namedElements"))
+    implementation(project(":eclipse-ui:common"))
     include(project(":eclipse-ui:common"))
 }
 
@@ -62,10 +61,12 @@ tasks.jar {
     archiveClassifier.set("")
 }
 
-tasks.remapJar {
-    archiveBaseName.set("EclipseUI")
-    archiveVersion.set("${BuildConfig.MOD_VERSION}-fabric-${BuildConfig.MINECRAFT_VERSION_BUILD}")
-    archiveClassifier.set("")
+tasks.configureEach {
+    if (name == "remapJar" && this is org.gradle.jvm.tasks.Jar) {
+        archiveBaseName.set("EclipseUI")
+        archiveVersion.set("${BuildConfig.MOD_VERSION}-fabric-${BuildConfig.MINECRAFT_VERSION_BUILD}")
+        archiveClassifier.set("")
+    }
 }
 
 tasks.named<Jar>("sourcesJar") {
@@ -74,8 +75,10 @@ tasks.named<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
 }
 
-tasks.named("remapSourcesJar") {
-    (this as org.gradle.jvm.tasks.Jar).archiveBaseName.set("EclipseUI")
-    (this as org.gradle.jvm.tasks.Jar).archiveVersion.set("${BuildConfig.MOD_VERSION}-fabric-${BuildConfig.MINECRAFT_VERSION_BUILD}")
-    (this as org.gradle.jvm.tasks.Jar).archiveClassifier.set("sources")
+tasks.configureEach {
+    if (name == "remapSourcesJar" && this is org.gradle.jvm.tasks.Jar) {
+        archiveBaseName.set("EclipseUI")
+        archiveVersion.set("${BuildConfig.MOD_VERSION}-fabric-${BuildConfig.MINECRAFT_VERSION_BUILD}")
+        archiveClassifier.set("sources")
+    }
 }

@@ -1,5 +1,5 @@
 plugins {
-    id("fabric-loom") version "1.14-SNAPSHOT"
+    id("net.fabricmc.fabric-loom") version "1.15-SNAPSHOT"
 }
 
 repositories {
@@ -11,16 +11,15 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:${property("minecraft_version").toString()}")
-    mappings(loom.officialMojangMappings())
     
-    modImplementation("net.fabricmc:fabric-loader:${property("fabric_loader_version").toString()}")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version").toString()}")
+    implementation("net.fabricmc:fabric-loader:${property("fabric_loader_version").toString()}")
+    implementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version").toString()}")
     
     // ModMenu integration
-    modImplementation("com.terraformersmc:modmenu:17.0.0-alpha.1")
+    implementation("com.terraformersmc:modmenu:18.0.0-alpha.5")
     
     // EclipseUI from JitPack
-    modImplementation("com.github.coredex-source.EclipseUI:EclipseUI-fabric:${property("eclipseui_version").toString()}")
+    implementation("com.github.coredex-source.EclipseUI:EclipseUI-fabric:${property("eclipseui_version").toString()}")
 }
 
 loom {

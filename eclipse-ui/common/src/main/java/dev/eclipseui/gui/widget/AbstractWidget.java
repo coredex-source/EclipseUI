@@ -115,7 +115,7 @@ public abstract class AbstractWidget implements Renderable, GuiEventListener, Na
     
     @Override
     public boolean charTyped(CharacterEvent event) {
-        return this.onCharTyped((char) event.codepoint(), event.modifiers());
+        return this.onCharTyped((char) event.codepoint(), 0);
     }
     
     protected boolean onCharTyped(char chr, int modifiers) {

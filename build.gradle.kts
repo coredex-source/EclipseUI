@@ -37,12 +37,12 @@ tasks.register<Jar>("combinedFabricJar") {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     
     dependsOn(
-        ":eclipse-core:common:remapJar",
-        ":eclipse-core:fabric:remapJar",
-        ":eclipse-platform:common:remapJar",
-        ":eclipse-platform:fabric:remapJar",
-        ":eclipse-ui:common:remapJar",
-        ":eclipse-ui:fabric:remapJar"
+        ":eclipse-core:common:jar",
+        ":eclipse-core:fabric:jar",
+        ":eclipse-platform:common:jar",
+        ":eclipse-platform:fabric:jar",
+        ":eclipse-ui:common:jar",
+        ":eclipse-ui:fabric:jar"
     )
     
     // Use the custom combined fabric.mod.json with variable expansion
@@ -57,28 +57,28 @@ tasks.register<Jar>("combinedFabricJar") {
     }
     
     // Include eclipseui fabric module (exclude its fabric.mod.json and nested JARs)
-    from(zipTree(project(":eclipse-ui:fabric").tasks.named("remapJar").get().outputs.files.singleFile)) {
+    from(zipTree(project(":eclipse-ui:fabric").tasks.named("jar").get().outputs.files.singleFile)) {
         exclude("fabric.mod.json")
         exclude("META-INF/jars/**")
     }
     
     // Include common modules directly (these contain the actual classes)
-    from(zipTree(project(":eclipse-core:common").tasks.named("remapJar").get().outputs.files.singleFile)) {
+    from(zipTree(project(":eclipse-core:common").tasks.named("jar").get().outputs.files.singleFile)) {
         exclude("fabric.mod.json")
     }
-    from(zipTree(project(":eclipse-platform:common").tasks.named("remapJar").get().outputs.files.singleFile)) {
+    from(zipTree(project(":eclipse-platform:common").tasks.named("jar").get().outputs.files.singleFile)) {
         exclude("fabric.mod.json")
     }
-    from(zipTree(project(":eclipse-ui:common").tasks.named("remapJar").get().outputs.files.singleFile)) {
+    from(zipTree(project(":eclipse-ui:common").tasks.named("jar").get().outputs.files.singleFile)) {
         exclude("fabric.mod.json")
     }
     
     // Include fabric-specific modules (exclude their nested JARs and config files)
-    from(zipTree(project(":eclipse-core:fabric").tasks.named("remapJar").get().outputs.files.singleFile)) {
+    from(zipTree(project(":eclipse-core:fabric").tasks.named("jar").get().outputs.files.singleFile)) {
         exclude("fabric.mod.json")
         exclude("META-INF/jars/**")
     }
-    from(zipTree(project(":eclipse-platform:fabric").tasks.named("remapJar").get().outputs.files.singleFile)) {
+    from(zipTree(project(":eclipse-platform:fabric").tasks.named("jar").get().outputs.files.singleFile)) {
         exclude("fabric.mod.json")
         exclude("META-INF/jars/**")
     }
@@ -103,31 +103,31 @@ tasks.register<Jar>("combinedFabricSourcesJar") {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     
     dependsOn(
-        ":eclipse-core:common:remapSourcesJar",
-        ":eclipse-core:fabric:remapSourcesJar",
-        ":eclipse-platform:common:remapSourcesJar",
-        ":eclipse-platform:fabric:remapSourcesJar",
-        ":eclipse-ui:common:remapSourcesJar",
-        ":eclipse-ui:fabric:remapSourcesJar"
+        ":eclipse-core:common:sourcesJar",
+        ":eclipse-core:fabric:sourcesJar",
+        ":eclipse-platform:common:sourcesJar",
+        ":eclipse-platform:fabric:sourcesJar",
+        ":eclipse-ui:common:sourcesJar",
+        ":eclipse-ui:fabric:sourcesJar"
     )
     
-    from(zipTree(project(":eclipse-ui:fabric").tasks.named("remapSourcesJar").get().outputs.files.singleFile)) {
+    from(zipTree(project(":eclipse-ui:fabric").tasks.named("sourcesJar").get().outputs.files.singleFile)) {
         exclude("META-INF/jars/**")
     }
-    from(zipTree(project(":eclipse-core:common").tasks.named("remapSourcesJar").get().outputs.files.singleFile)) {
+    from(zipTree(project(":eclipse-core:common").tasks.named("sourcesJar").get().outputs.files.singleFile)) {
         exclude("fabric.mod.json")
     }
-    from(zipTree(project(":eclipse-platform:common").tasks.named("remapSourcesJar").get().outputs.files.singleFile)) {
+    from(zipTree(project(":eclipse-platform:common").tasks.named("sourcesJar").get().outputs.files.singleFile)) {
         exclude("fabric.mod.json")
     }
-    from(zipTree(project(":eclipse-ui:common").tasks.named("remapSourcesJar").get().outputs.files.singleFile)) {
+    from(zipTree(project(":eclipse-ui:common").tasks.named("sourcesJar").get().outputs.files.singleFile)) {
         exclude("fabric.mod.json")
     }
-    from(zipTree(project(":eclipse-core:fabric").tasks.named("remapSourcesJar").get().outputs.files.singleFile)) {
+    from(zipTree(project(":eclipse-core:fabric").tasks.named("sourcesJar").get().outputs.files.singleFile)) {
         exclude("fabric.mod.json")
         exclude("META-INF/jars/**")
     }
-    from(zipTree(project(":eclipse-platform:fabric").tasks.named("remapSourcesJar").get().outputs.files.singleFile)) {
+    from(zipTree(project(":eclipse-platform:fabric").tasks.named("sourcesJar").get().outputs.files.singleFile)) {
         exclude("fabric.mod.json")
         exclude("META-INF/jars/**")
     }
