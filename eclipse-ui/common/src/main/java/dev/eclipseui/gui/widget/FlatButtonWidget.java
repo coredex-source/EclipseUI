@@ -3,7 +3,7 @@ package dev.eclipseui.gui.widget;
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -44,7 +44,7 @@ public class FlatButtonWidget extends AbstractWidget {
     }
     
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    protected void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         if (this.theme.useVanillaWidgets()) {
             renderVanillaButton(graphics, mouseX, mouseY);
         } else {
@@ -52,7 +52,7 @@ public class FlatButtonWidget extends AbstractWidget {
         }
     }
     
-    private void renderVanillaButton(GuiGraphics graphics, int mouseX, int mouseY) {
+    private void renderVanillaButton(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         var font = Minecraft.getInstance().font;
         
         // Select sprite based on state
@@ -76,10 +76,10 @@ public class FlatButtonWidget extends AbstractWidget {
         int textWidth = font.width(this.text);
         int textX = dim.getCenterX() - (textWidth / 2);
         int textY = dim.getCenterY() - (font.lineHeight / 2);
-        graphics.drawString(font, this.text, textX, textY, textColor, true);
+        graphics.text(font, this.text, textX, textY, textColor, true);
     }
     
-    private void renderFlatButton(GuiGraphics graphics, int mouseX, int mouseY) {
+    private void renderFlatButton(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         int bgColor;
         int textColor;
         
@@ -109,7 +109,7 @@ public class FlatButtonWidget extends AbstractWidget {
         int textWidth = font.width(this.text);
         int textX = dim.getCenterX() - (textWidth / 2);
         int textY = dim.getCenterY() - (font.lineHeight / 2);
-        graphics.drawString(font, this.text, textX, textY, textColor, false);
+        graphics.text(font, this.text, textX, textY, textColor, false);
     }
     
     @Override

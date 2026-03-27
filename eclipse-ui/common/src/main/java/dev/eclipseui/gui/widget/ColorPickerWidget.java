@@ -4,7 +4,7 @@ import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.gui.theme.Colors;
 import dev.eclipseui.util.Dim2i;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -17,6 +17,9 @@ import java.util.function.Supplier;
  * A color picker widget for color options.
  */
 public class ColorPickerWidget extends OptionWidget {
+
+    private static final int PICKER_WIDTH = 150;
+    private static final int PICKER_HEIGHT = 120;
     
     private Supplier<Integer> getter;
     private Consumer<Integer> setter;
@@ -118,6 +121,13 @@ public class ColorPickerWidget extends OptionWidget {
         int alpha = allowAlpha ? Colors.getAlpha(getValue()) : 255;
         return Colors.argb(alpha, rgb[0], rgb[1], rgb[2]);
     }
+
+    private String getDisplayHex(int color) {
+        if (allowAlpha) {
+            return Colors.toHexWithHash(color);
+        }
+        return String.format("#%06X", color & 0x00FFFFFF);
+    }
     
     private static final float INV_255 = 1f / 255f;
     
@@ -192,7 +202,7 @@ public class ColorPickerWidget extends OptionWidget {
     }
 
     @Override
-    protected void renderControl(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    protected void renderControl(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         Dim2i controlDim = getControlDim();
         var font = Minecraft.getInstance().font;
         
@@ -218,11 +228,11 @@ public class ColorPickerWidget extends OptionWidget {
         }
         
         // Draw hex value
-        String hexText = Colors.toHexWithHash(color);
+        String hexText = getDisplayHex(color);
         int textX = previewX + previewSize + 6;
         int textY = controlDim.getCenterY() - (font.lineHeight / 2);
         int textColor = theme.useVanillaWidgets() ? 0xFFE0E0E0 : theme.textSecondary();
-        graphics.drawString(font, hexText, textX, textY, textColor, theme.useVanillaWidgets());
+        graphics.text(font, hexText, textX, textY, textColor, theme.useVanillaWidgets());
         
         // Expanded picker is rendered in renderOverlay to appear on top
         
@@ -245,7 +255,7 @@ public class ColorPickerWidget extends OptionWidget {
     }
     
     @Override
-    public void renderOverlay(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void renderOverlay(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         if (!this.expanded) return;
         
         Dim2i controlDim = getControlDim();
@@ -253,9 +263,9 @@ public class ColorPickerWidget extends OptionWidget {
         renderExpandedPicker(graphics, controlDim, mouseX, mouseY, font);
     }
     
-    private void renderExpandedPicker(GuiGraphics graphics, Dim2i controlDim, int mouseX, int mouseY, net.minecraft.client.gui.Font font) {
-        int pickerWidth = 150;
-        int pickerHeight = 120;
+    private void renderExpandedPicker(GuiGraphicsExtractor graphics, Dim2i controlDim, int mouseX, int mouseY, net.minecraft.client.gui.Font font) {
+        int pickerWidth = PICKER_WIDTH;
+        int pickerHeight = PICKER_HEIGHT;
         int pickerX = controlDim.x();
         int pickerY = getPickerY(pickerHeight);
         
@@ -331,8 +341,8 @@ public class ColorPickerWidget extends OptionWidget {
             int borderColor = editingHex ? theme.inputBorderFocused() : theme.inputBorder();
             drawRect(graphics, inputX, inputY, inputWidth, inputHeight, borderColor);
             
-            String text = editingHex ? hexInput : Colors.toHexWithHash(getValue());
-            graphics.drawString(font, text, inputX + 4, inputY + 3, theme.textPrimary(), false);
+            String text = editingHex ? hexInput : getDisplayHex(getValue());
+            graphics.text(font, text, inputX + 4, inputY + 3, theme.textPrimary(), false);
             
             // Cursor
             if (editingHex && cursorBlinkTicks / 6 % 2 == 0) {
@@ -360,7 +370,7 @@ public class ColorPickerWidget extends OptionWidget {
         if (button != 0 || !this.enabled) return false;
         
         Dim2i controlDim = getControlDim();
-        int previewSize = 16;
+        int previewSize = theme.useVanillaWidgets() ? 20 : 16;
         int previewX = controlDim.x();
         int previewY = controlDim.getCenterY() - (previewSize / 2);
         
@@ -374,7 +384,7 @@ public class ColorPickerWidget extends OptionWidget {
         
         if (this.expanded) {
             int pickerX = controlDim.x();
-            int pickerHeight = 120;
+            int pickerHeight = PICKER_HEIGHT;
             int pickerY = getPickerY(pickerHeight);
             int svWidth = 100;
             int svHeight = 80;
@@ -410,7 +420,7 @@ public class ColorPickerWidget extends OptionWidget {
                 if (mouseX >= inputX && mouseX < inputX + inputWidth
                     && mouseY >= inputY && mouseY < inputY + inputHeight) {
                     editingHex = true;
-                    hexInput = Colors.toHexWithHash(getValue());
+                    hexInput = getDisplayHex(getValue());
                     cursorPosition = hexInput.length();
                     return true;
                 }
@@ -478,9 +488,9 @@ public class ColorPickerWidget extends OptionWidget {
         
         Dim2i controlDim = getControlDim();
         int pickerX = controlDim.x();
-        int pickerY = dim.getLimitY() + 2;
-        int pickerWidth = 130;
-        int pickerHeight = 120;
+        int pickerY = getPickerY(PICKER_HEIGHT);
+        int pickerWidth = PICKER_WIDTH;
+        int pickerHeight = PICKER_HEIGHT;
         
         // Check if click is in the picker area
         if (mouseX >= pickerX && mouseX < pickerX + pickerWidth
@@ -520,7 +530,7 @@ public class ColorPickerWidget extends OptionWidget {
                 if (mouseX >= inputX && mouseX < inputX + inputWidth
                     && mouseY >= inputY && mouseY < inputY + inputHeight) {
                     editingHex = true;
-                    hexInput = Colors.toHexWithHash(getValue());
+                    hexInput = getDisplayHex(getValue());
                     cursorPosition = hexInput.length();
                     return true;
                 }
@@ -593,7 +603,8 @@ public class ColorPickerWidget extends OptionWidget {
         if (editingHex) {
             if ((chr >= '0' && chr <= '9') || (chr >= 'a' && chr <= 'f') 
                 || (chr >= 'A' && chr <= 'F') || chr == '#') {
-                if (hexInput.length() < 9) {
+                int maxLength = allowAlpha ? 9 : 7;
+                if (hexInput.length() < maxLength) {
                     hexInput = hexInput.substring(0, cursorPosition) + chr + hexInput.substring(cursorPosition);
                     cursorPosition++;
                 }
@@ -632,6 +643,6 @@ public class ColorPickerWidget extends OptionWidget {
     @Override
     public void updateNarration(NarrationElementOutput output) {
         output.add(NarratedElementType.TITLE, this.name);
-        output.add(NarratedElementType.USAGE, Component.literal(Colors.toHexWithHash(getValue())));
+        output.add(NarratedElementType.USAGE, Component.literal(getDisplayHex(getValue())));
     }
 }

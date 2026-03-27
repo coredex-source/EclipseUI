@@ -7,7 +7,7 @@ import dev.eclipseui.gui.theme.ThemeRegistry;
 import dev.eclipseui.gui.widget.*;
 import dev.eclipseui.util.Dim2i;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.CharacterEvent;
@@ -217,9 +217,9 @@ public class EclipseConfigScreen extends Screen {
     }
     
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         // Render blurred background (Minecraft 1.21+ default behavior)
-        super.render(graphics, mouseX, mouseY, delta);
+        super.extractRenderState(graphics, mouseX, mouseY, delta);
         
         // Draw semi-transparent overlay on top of blur
         if (theme.useVanillaWidgets()) {
@@ -243,16 +243,16 @@ public class EclipseConfigScreen extends Screen {
         }
         
         // Render widgets
-        categoryList.render(graphics, mouseX, mouseY, delta);
+        categoryList.extractRenderState(graphics, mouseX, mouseY, delta);
         optionList.renderWithoutOverlays(graphics, mouseX, mouseY, delta);
         
         if (saveButton != null) {
-            saveButton.render(graphics, mouseX, mouseY, delta);
+            saveButton.extractRenderState(graphics, mouseX, mouseY, delta);
         }
         if (resetButton != null) {
-            resetButton.render(graphics, mouseX, mouseY, delta);
+            resetButton.extractRenderState(graphics, mouseX, mouseY, delta);
         }
-        doneButton.render(graphics, mouseX, mouseY, delta);
+        doneButton.extractRenderState(graphics, mouseX, mouseY, delta);
         
         // Render overlays
         optionList.renderOverlays(graphics, mouseX, mouseY, delta);
@@ -261,7 +261,7 @@ public class EclipseConfigScreen extends Screen {
         renderOptionTooltip(graphics, mouseX, mouseY);
     }
     
-    private void renderHeader(GuiGraphics graphics) {
+    private void renderHeader(GuiGraphicsExtractor graphics) {
         if (theme.useVanillaWidgets()) {
             // Semi-transparent dark overlay for header
             graphics.fill(0, 0, this.width, HEADER_HEIGHT, 0x80000000);
@@ -272,10 +272,15 @@ public class EclipseConfigScreen extends Screen {
         }
         
         // Title
-        graphics.drawCenteredString(this.font, this.title, this.width / 2, (HEADER_HEIGHT - this.font.lineHeight) / 2, theme.textPrimary());
+        graphics.centeredText(this.font, this.title, this.width / 2, (HEADER_HEIGHT - this.font.lineHeight) / 2, theme.textPrimary());
     }
     
-    private void renderOptionTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+    private void renderOptionTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        // Overlay widgets (dropdowns/color pickers) should render unobstructed.
+        if (optionList.hasExpandedOverlay()) {
+            return;
+        }
+
         // Quick bounds check before iterating
         if (mouseX < SIDEBAR_WIDTH || mouseY < HEADER_HEIGHT || mouseY > this.height - FOOTER_HEIGHT) {
             return;
@@ -299,7 +304,7 @@ public class EclipseConfigScreen extends Screen {
                 
                 // Text
                 for (int i = 0; i < lines.size(); i++) {
-                    graphics.drawString(this.font, lines.get(i), x, y + i * (this.font.lineHeight + 2), 0xFFFFFFFF);
+                    graphics.text(this.font, lines.get(i), x, y + i * (this.font.lineHeight + 2), 0xFFFFFFFF);
                 }
                 break;
             }

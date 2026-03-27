@@ -3,7 +3,7 @@ package dev.eclipseui.gui.widget;
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,7 +70,7 @@ public abstract class OptionWidget extends AbstractWidget {
     }
     
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    protected void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         // Draw row background on hover
         if (this.hovered) {
             if (theme.useVanillaWidgets()) {
@@ -90,14 +90,14 @@ public abstract class OptionWidget extends AbstractWidget {
         // Draw modified indicator
         if (this.modified) {
             var font = Minecraft.getInstance().font;
-            graphics.drawString(font, "*", dim.x() + 2, dim.getCenterY() - 4, 
+            graphics.text(font, "*", dim.x() + 2, dim.getCenterY() - 4, 
                 theme.useVanillaWidgets() ? 0xFFFFFF00 : this.theme.accentPrimary(), theme.useVanillaWidgets());
         }
         
         // Draw restart warning icon
         if (this.requiresRestart) {
             var font = Minecraft.getInstance().font;
-            graphics.drawString(font, "⚠", dim.getLimitX() - 12, dim.getCenterY() - 4, 
+            graphics.text(font, "!", dim.getLimitX() - 12, dim.getCenterY() - 4, 
                 0xFFFFAA00, theme.useVanillaWidgets());
         }
     }
@@ -105,7 +105,7 @@ public abstract class OptionWidget extends AbstractWidget {
     /**
      * Render the label on the left side.
      */
-    protected void renderLabel(GuiGraphics graphics) {
+    protected void renderLabel(GuiGraphicsExtractor graphics) {
         var font = Minecraft.getInstance().font;
         Dim2i labelDim = getLabelDim();
         
@@ -120,13 +120,13 @@ public abstract class OptionWidget extends AbstractWidget {
         // Add padding for modified indicator
         int textX = labelDim.x() + (this.modified ? 12 : 4);
         
-        graphics.drawString(font, this.name, textX, textY, textColor, theme.useVanillaWidgets());
+        graphics.text(font, this.name, textX, textY, textColor, theme.useVanillaWidgets());
     }
     
     /**
      * Override to render the control widget.
      */
-    protected abstract void renderControl(GuiGraphics graphics, int mouseX, int mouseY, float delta);
+    protected abstract void renderControl(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta);
     
     /**
      * Handle clicks in expanded areas (for dropdowns, color pickers, etc.)

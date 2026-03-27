@@ -3,7 +3,7 @@ package dev.eclipseui.gui.widget;
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -169,7 +169,7 @@ public class SliderWidget extends OptionWidget {
     }
     
     @Override
-    protected void renderControl(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    protected void renderControl(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         Dim2i controlDim = getControlDim();
         var font = Minecraft.getInstance().font;
         
@@ -201,7 +201,7 @@ public class SliderWidget extends OptionWidget {
             int textX = sliderX + (sliderWidth - textWidth) / 2;
             int textY = sliderY + (sliderHeight - font.lineHeight) / 2;
             int textColor = this.enabled ? 0xFFFFFFFF : 0xFF707070;
-            graphics.drawString(font, text, textX, textY, textColor, true);
+            graphics.text(font, text, textX, textY, textColor, true);
         } else {
             // Modern flat slider style
             int sliderHeight = 8;
@@ -240,7 +240,7 @@ public class SliderWidget extends OptionWidget {
                 int textX = sliderX + sliderWidth + 8;
                 int textY = controlDim.getCenterY() - (font.lineHeight / 2);
                 int textColor = this.enabled ? theme.textSecondary() : theme.textDisabled();
-                graphics.drawString(font, text, textX, textY, textColor, false);
+                graphics.text(font, text, textX, textY, textColor, false);
             }
         }
     }

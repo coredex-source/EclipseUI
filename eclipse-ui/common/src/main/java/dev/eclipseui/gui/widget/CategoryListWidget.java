@@ -3,7 +3,7 @@ package dev.eclipseui.gui.widget;
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -56,7 +56,7 @@ public class CategoryListWidget extends AbstractWidget {
     }
     
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    protected void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         // Draw background
         if (theme.useVanillaWidgets()) {
             // Vanilla style - dark transparent background
@@ -90,7 +90,7 @@ public class CategoryListWidget extends AbstractWidget {
                 int textX = dim.x() + (dim.width() - font.width(category.name)) / 2;
                 int textY = itemY + (ITEM_HEIGHT - font.lineHeight) / 2;
                 int textColor = isSelected ? 0xFFFFFFFF : (isHovered ? 0xFFFFFFA0 : 0xFFE0E0E0);
-                graphics.drawString(font, category.name, textX, textY, textColor, true);
+                graphics.text(font, category.name, textX, textY, textColor, true);
             } else {
                 // Modern flat style
                 // Background
@@ -118,7 +118,7 @@ public class CategoryListWidget extends AbstractWidget {
                 int textX = iconX + (category.icon != null ? ICON_SIZE + PADDING : 0);
                 int textY = itemY + (ITEM_HEIGHT - font.lineHeight) / 2;
                 int textColor = isSelected ? theme.textPrimary() : theme.textSecondary();
-                graphics.drawString(font, category.name, textX, textY, textColor, false);
+                graphics.text(font, category.name, textX, textY, textColor, false);
             }
         }
         

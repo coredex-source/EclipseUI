@@ -2,7 +2,7 @@ package dev.eclipseui.gui.widget;
 
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -30,7 +30,7 @@ public abstract class AbstractWidget implements Renderable, GuiEventListener, Na
     }
     
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         if (!this.visible) {
             return;
         }
@@ -43,14 +43,14 @@ public abstract class AbstractWidget implements Renderable, GuiEventListener, Na
      * Render overlay elements that should appear on top of all other widgets.
      * Called after all widgets have been rendered.
      */
-    public void renderOverlay(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void renderOverlay(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         // Override in subclasses that need overlay rendering (dropdowns, popups, etc.)
     }
     
     /**
      * Override this to render the widget content.
      */
-    protected abstract void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta);
+    protected abstract void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta);
     
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
@@ -231,14 +231,14 @@ public abstract class AbstractWidget implements Renderable, GuiEventListener, Na
     /**
      * Fill a rectangle with the given color.
      */
-    protected void fillRect(GuiGraphics graphics, int x, int y, int width, int height, int color) {
+    protected void fillRect(GuiGraphicsExtractor graphics, int x, int y, int width, int height, int color) {
         graphics.fill(x, y, x + width, y + height, color);
     }
     
     /**
      * Draw a rectangle outline.
      */
-    protected void drawRect(GuiGraphics graphics, int x, int y, int width, int height, int color) {
+    protected void drawRect(GuiGraphicsExtractor graphics, int x, int y, int width, int height, int color) {
         // Top
         graphics.fill(x, y, x + width, y + 1, color);
         // Bottom
@@ -253,7 +253,7 @@ public abstract class AbstractWidget implements Renderable, GuiEventListener, Na
      * Fill a rounded rectangle with actual rounded corners.
      * Uses a corner-cutting approach for pixel-perfect corners.
      */
-    protected void fillRoundedRect(GuiGraphics graphics, int x, int y, int width, int height, int radius, int color) {
+    protected void fillRoundedRect(GuiGraphicsExtractor graphics, int x, int y, int width, int height, int radius, int color) {
         if (radius <= 0) {
             fillRect(graphics, x, y, width, height, color);
             return;

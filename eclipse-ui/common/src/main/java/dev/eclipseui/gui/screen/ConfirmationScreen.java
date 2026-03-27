@@ -1,7 +1,7 @@
 package dev.eclipseui.gui.screen;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -56,7 +56,7 @@ public class ConfirmationScreen extends Screen {
     }
     
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         // Dim background
         graphics.fill(0, 0, this.width, this.height, 0xC0101010);
         
@@ -76,15 +76,15 @@ public class ConfirmationScreen extends Screen {
         var font = Minecraft.getInstance().font;
         int titleX = dialogX + (DIALOG_WIDTH - font.width(this.title)) / 2;
         int titleY = dialogY + PADDING;
-        graphics.drawString(font, this.title, titleX, titleY, 0xFFFFFFFF, false);
+        graphics.text(font, this.title, titleX, titleY, 0xFFFFFFFF, false);
         
         // Message
         int messageY = titleY + font.lineHeight + 8;
         int messageX = dialogX + (DIALOG_WIDTH - font.width(this.message)) / 2;
-        graphics.drawString(font, this.message, messageX, messageY, 0xFFAAAAAA, false);
+        graphics.text(font, this.message, messageX, messageY, 0xFFAAAAAA, false);
         
         // Render buttons
-        super.render(graphics, mouseX, mouseY, delta);
+        super.extractRenderState(graphics, mouseX, mouseY, delta);
     }
     
     @Override

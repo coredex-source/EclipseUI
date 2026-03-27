@@ -3,7 +3,7 @@ package dev.eclipseui.gui.widget;
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 
 /**
@@ -35,7 +35,7 @@ public class LabelWidget extends OptionWidget {
     }
     
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    protected void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         var font = Minecraft.getInstance().font;
         
         int textColor = getTextColor();
@@ -44,7 +44,7 @@ public class LabelWidget extends OptionWidget {
         
         if (style == LabelStyle.HEADER) {
             // Draw with slight emphasis - bold effect via double render
-            graphics.drawString(font, text, textX, textY, textColor, theme.useVanillaWidgets());
+            graphics.text(font, text, textX, textY, textColor, theme.useVanillaWidgets());
             if (!theme.useVanillaWidgets()) {
                 // Add subtle underline for headers
                 int textWidth = font.width(text);
@@ -53,7 +53,7 @@ public class LabelWidget extends OptionWidget {
                 fillRect(graphics, textX, underlineY, textWidth, 1, underlineColor);
             }
         } else {
-            graphics.drawString(font, text, textX, textY, textColor, theme.useVanillaWidgets());
+            graphics.text(font, text, textX, textY, textColor, theme.useVanillaWidgets());
         }
     }
     
@@ -74,12 +74,12 @@ public class LabelWidget extends OptionWidget {
     }
     
     @Override
-    protected void renderControl(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    protected void renderControl(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         // No control to render
     }
     
     @Override
-    protected void renderLabel(GuiGraphics graphics) {
+    protected void renderLabel(GuiGraphicsExtractor graphics) {
         // We override renderWidget entirely, so no label needed
     }
     

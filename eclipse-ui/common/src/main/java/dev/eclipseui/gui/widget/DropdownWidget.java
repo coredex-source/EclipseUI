@@ -3,7 +3,7 @@ package dev.eclipseui.gui.widget;
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -115,7 +115,7 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
     }
     
     @Override
-    protected void renderControl(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    protected void renderControl(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         Dim2i controlDim = getControlDim();
         var font = Minecraft.getInstance().font;
         
@@ -139,7 +139,7 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
             int textX = buttonX + (buttonWidth - textWidth) / 2;
             int textY = buttonY + (buttonHeight - font.lineHeight) / 2;
             int textColor = this.enabled ? 0xFFFFFFFF : 0xFF707070;
-            graphics.drawString(font, displayText, textX, textY, textColor, true);
+            graphics.text(font, displayText, textX, textY, textColor, true);
         } else {
             // Modern flat style dropdown
             int buttonHeight = 16;
@@ -159,12 +159,12 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
             Component displayText = getDisplayText(getValue());
             int textColor = this.enabled ? theme.textPrimary() : theme.textDisabled();
             int textY = buttonY + (buttonHeight - font.lineHeight) / 2;
-            graphics.drawString(font, displayText, buttonX + 6, textY, textColor, false);
+            graphics.text(font, displayText, buttonX + 6, textY, textColor, false);
             
             // Draw dropdown arrow
             String arrow = this.expanded ? "▲" : "▼";
             int arrowX = buttonX + buttonWidth - font.width(arrow) - 6;
-            graphics.drawString(font, arrow, arrowX, textY, theme.textSecondary(), false);
+            graphics.text(font, arrow, arrowX, textY, theme.textSecondary(), false);
         }
         
         // Dropdown items are rendered in renderOverlay to appear on top of other widgets
@@ -194,7 +194,7 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
     }
     
     @Override
-    public void renderOverlay(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void renderOverlay(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         if (!this.expanded || this.enumClass == null) return;
         
         Dim2i controlDim = getControlDim();
@@ -250,7 +250,7 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
                 int textX = buttonX + (buttonWidth - textWidth) / 2;
                 int textY2 = itemY + (itemHeight - font.lineHeight) / 2;
                 int itemTextColor = isSelected ? 0xFFFFFFFF : 0xFFAAAAAA;
-                graphics.drawString(font, itemText, textX, textY2, itemTextColor, true);
+                graphics.text(font, itemText, textX, textY2, itemTextColor, true);
             }
         } else {
             // Modern flat style dropdown overlay
@@ -287,7 +287,7 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
                 
                 Component itemText = getDisplayText(value);
                 int itemTextColor = isSelected ? theme.textPrimary() : theme.textSecondary();
-                graphics.drawString(font, itemText, buttonX + 6, itemY + (itemHeight - font.lineHeight) / 2, itemTextColor, false);
+                graphics.text(font, itemText, buttonX + 6, itemY + (itemHeight - font.lineHeight) / 2, itemTextColor, false);
             }
         }
     }

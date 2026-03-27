@@ -2,7 +2,7 @@ package dev.eclipseui.gui.widget;
 
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 
 /**
@@ -19,7 +19,7 @@ public class SeparatorWidget extends OptionWidget {
     }
     
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    protected void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         // Draw the separator line
         int lineY = dim.getCenterY();
         int lineStartX = dim.x() + 8;
@@ -36,12 +36,12 @@ public class SeparatorWidget extends OptionWidget {
     }
     
     @Override
-    protected void renderControl(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    protected void renderControl(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         // No control to render
     }
     
     @Override
-    protected void renderLabel(GuiGraphics graphics) {
+    protected void renderLabel(GuiGraphicsExtractor graphics) {
         // No label to render
     }
     
