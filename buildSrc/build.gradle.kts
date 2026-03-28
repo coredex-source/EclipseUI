@@ -2,7 +2,7 @@ import java.util.Properties
 import java.io.FileInputStream
 
 plugins {
-    `kotlin-dsl`
+    id("org.jetbrains.kotlin.jvm") version "2.3.20"
 }
 
 val props = Properties().apply {

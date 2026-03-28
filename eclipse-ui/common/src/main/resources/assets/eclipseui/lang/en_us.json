@@ -7,5 +7,6 @@
   "eclipseui.confirm.no": "Cancel",
   "eclipseui.button.save": "Save",
   "eclipseui.button.reset": "Reset",
-  "eclipseui.button.done": "Done"
+  "eclipseui.button.done": "Done",
+  "eclipseui.colorpicker.title": "Color Picker"
 }
