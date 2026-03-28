@@ -96,7 +96,6 @@ public class ColorPickerEditScreen extends Screen {
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
-        super.extractRenderState(graphics, mouseX, mouseY, delta);
 
         float progress = Mth.clamp((openTicks + delta) / 10f, 0f, 1f);
         float eased = 1f - (1f - progress) * (1f - progress);

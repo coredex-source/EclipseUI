@@ -105,7 +105,9 @@ public class OptionListWidget extends AbstractWidget {
             
             // Update option position for rendering
             Dim2i optionDim = option.getDim();
-            option.setDim(new Dim2i(optionDim.x(), itemY, optionDim.width(), optionDim.height()));
+            if (optionDim.y() != itemY) {
+                option.setDim(new Dim2i(optionDim.x(), itemY, optionDim.width(), optionDim.height()));
+            }
             
             option.extractRenderState(graphics, mouseX, mouseY, delta);
         }
@@ -183,7 +185,9 @@ public class OptionListWidget extends AbstractWidget {
             int expandedIndex = options.indexOf(expandedWidget);
             int itemY = dim.y() + (expandedIndex * ITEM_HEIGHT) - scrollOffsetInt;
             Dim2i optionDim = expandedWidget.getDim();
-            expandedWidget.setDim(new Dim2i(optionDim.x(), itemY, optionDim.width(), optionDim.height()));
+            if (optionDim.y() != itemY) {
+                expandedWidget.setDim(new Dim2i(optionDim.x(), itemY, optionDim.width(), optionDim.height()));
+            }
             
             // Let expanded widget handle the click
             if (expandedWidget.handleExpandedClick(mouseX, mouseY, button)) {
@@ -231,7 +235,9 @@ public class OptionListWidget extends AbstractWidget {
             
             // Update position for click handling
             Dim2i optionDim = option.getDim();
-            option.setDim(new Dim2i(optionDim.x(), itemY, optionDim.width(), optionDim.height()));
+            if (optionDim.y() != itemY) {
+                option.setDim(new Dim2i(optionDim.x(), itemY, optionDim.width(), optionDim.height()));
+            }
             
             if (option.handleMouseClicked(mouseX, mouseY, button)) {
                 // Unfocus all other options when one is clicked

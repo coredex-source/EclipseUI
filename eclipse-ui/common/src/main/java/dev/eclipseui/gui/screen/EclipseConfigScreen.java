@@ -220,8 +220,6 @@ public class EclipseConfigScreen extends Screen {
     
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
-        // Render blurred background (Minecraft 1.21+ default behavior)
-        super.extractRenderState(graphics, mouseX, mouseY, delta);
         
         // Draw semi-transparent overlay on top of blur
         if (theme.useVanillaWidgets()) {
