@@ -4,10 +4,12 @@ import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.gui.theme.Colors;
 import dev.eclipseui.gui.screen.ColorPickerEditScreen;
 import dev.eclipseui.util.Dim2i;
+import dev.eclipseui.util.MinecraftScreenCompat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 import java.util.function.Consumer;
@@ -98,12 +100,16 @@ public class ColorPickerWidget extends OptionWidget {
 
     private void openPickerScreen() {
         var minecraft = Minecraft.getInstance();
-        if (minecraft.screen == null) {
+        Screen parentScreen = this.getHostScreen();
+        if (parentScreen == null) {
+            parentScreen = MinecraftScreenCompat.getCurrentScreen(minecraft);
+        }
+        if (parentScreen == null) {
             return;
         }
 
-        minecraft.setScreen(new ColorPickerEditScreen(
-            minecraft.screen,
+        MinecraftScreenCompat.setScreen(minecraft, new ColorPickerEditScreen(
+            parentScreen,
             theme,
             name,
             allowAlpha,

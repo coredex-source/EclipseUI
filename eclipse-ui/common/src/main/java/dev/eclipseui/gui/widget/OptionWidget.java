@@ -4,6 +4,7 @@ import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +16,7 @@ public abstract class OptionWidget extends AbstractWidget {
     
     protected Component name;
     protected @Nullable Component description;
+    protected @Nullable Screen hostScreen;
     protected boolean modified = false;
     protected boolean requiresRestart = false;
     
@@ -34,6 +36,14 @@ public abstract class OptionWidget extends AbstractWidget {
     
     public @Nullable Component getDescription() {
         return this.description;
+    }
+
+    public void setHostScreen(@Nullable Screen hostScreen) {
+        this.hostScreen = hostScreen;
+    }
+
+    public @Nullable Screen getHostScreen() {
+        return this.hostScreen;
     }
     
     public void setModified(boolean modified) {

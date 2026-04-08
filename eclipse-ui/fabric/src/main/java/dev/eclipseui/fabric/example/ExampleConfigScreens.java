@@ -3,6 +3,7 @@ package dev.eclipseui.fabric.example;
 import dev.eclipseui.EclipseUI;
 import dev.eclipseui.api.Theme;
 import dev.eclipseui.fabric.example.ExampleConfig.*;
+import dev.eclipseui.util.MinecraftScreenCompat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -225,7 +226,7 @@ public class ExampleConfigScreens {
                     .onChange(newTheme -> {
                         // Reopen screen with new theme
                         Minecraft mc = Minecraft.getInstance();
-                        mc.setScreen(createModernScreen(parent));
+                        MinecraftScreenCompat.setScreen(mc, createModernScreen(parent));
                     })
                 )
                 

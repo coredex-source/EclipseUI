@@ -2,6 +2,7 @@ package dev.eclipseui.gui.screen;
 
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.gui.theme.Colors;
+import dev.eclipseui.util.MinecraftScreenCompat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
@@ -621,12 +622,12 @@ public class ColorPickerEditScreen extends Screen {
 
     private void applyAndClose() {
         setter.accept(currentColor);
-        this.minecraft.setScreen(parent);
+        MinecraftScreenCompat.setScreen(this.minecraft, parent);
     }
 
     private void cancelAndClose() {
         setter.accept(originalColor);
-        this.minecraft.setScreen(parent);
+        MinecraftScreenCompat.setScreen(this.minecraft, parent);
     }
 
     private static boolean inside(double mx, double my, int x, int y, int w, int h) {

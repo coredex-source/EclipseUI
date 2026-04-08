@@ -6,6 +6,7 @@ import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.gui.theme.ThemeRegistry;
 import dev.eclipseui.gui.widget.*;
 import dev.eclipseui.util.Dim2i;
+import dev.eclipseui.util.MinecraftScreenCompat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Tooltip;
@@ -163,6 +164,7 @@ public class EclipseConfigScreen extends Screen {
         if (categoryIndex >= 0 && categoryIndex < categories.size()) {
             CategoryData category = categories.get(categoryIndex);
             for (OptionWidget option : category.options()) {
+                option.setHostScreen(this);
                 optionList.addOption(option);
             }
         }
@@ -194,7 +196,7 @@ public class EclipseConfigScreen extends Screen {
         // Check for unsaved changes
         if (optionList != null && optionList.hasModifiedOptions()) {
             // Show confirmation dialog
-            this.minecraft.setScreen(new ConfirmationScreen(
+            MinecraftScreenCompat.setScreen(this.minecraft, new ConfirmationScreen(
                 this,
                 Component.translatable("eclipseui.confirm.unsaved_changes.title"),
                 Component.translatable("eclipseui.confirm.unsaved_changes.message"),
@@ -203,9 +205,9 @@ public class EclipseConfigScreen extends Screen {
                         if (onClose != null) {
                             onClose.run();
                         }
-                        this.minecraft.setScreen(parent);
+                        MinecraftScreenCompat.setScreen(this.minecraft, parent);
                     } else {
-                        this.minecraft.setScreen(this);
+                        MinecraftScreenCompat.setScreen(this.minecraft, this);
                     }
                 }
             ));
@@ -215,7 +217,7 @@ public class EclipseConfigScreen extends Screen {
         if (onClose != null) {
             onClose.run();
         }
-        this.minecraft.setScreen(parent);
+        MinecraftScreenCompat.setScreen(this.minecraft, parent);
     }
     
     @Override
