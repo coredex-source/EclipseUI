@@ -31,7 +31,7 @@ tasks.register<Jar>("combinedFabricJar") {
     description = "Creates a combined JAR containing all EclipseUI modules for Fabric"
     
     archiveBaseName.set("EclipseUI-fabric")
-    archiveVersion.set(BuildConfig.getVersionString())
+    archiveVersion.set(BuildConfig.getFabricVersionString())
     archiveClassifier.set("")
     
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -49,10 +49,10 @@ tasks.register<Jar>("combinedFabricJar") {
     from("combined-fabric.mod.json") {
         rename { "fabric.mod.json" }
         filter { line ->
-            line.replace("@VERSION@", BuildConfig.getVersionString())
+            line.replace("@VERSION@", BuildConfig.getFabricVersionString())
                 .replace("@FABRIC_LOADER@", BuildConfig.FABRIC_LOADER_VERSION)
-                .replace("@MC_MIN@", BuildConfig.MINECRAFT_VERSION)
-                .replace("@MC_MAX@", BuildConfig.MINECRAFT_VERSION_MAX)
+                .replace("@MC_MIN@", BuildConfig.FABRIC_MINECRAFT_VERSION)
+                .replace("@MC_MAX@", BuildConfig.FABRIC_MINECRAFT_VERSION_MAX)
         }
     }
     
@@ -86,7 +86,7 @@ tasks.register<Jar>("combinedFabricJar") {
     manifest {
         attributes(
             "Implementation-Title" to BuildConfig.MOD_NAME,
-            "Implementation-Version" to BuildConfig.getVersionString(),
+            "Implementation-Version" to BuildConfig.getFabricVersionString(),
             "Implementation-Vendor" to BuildConfig.MOD_AUTHOR
         )
     }
@@ -97,7 +97,7 @@ tasks.register<Jar>("combinedFabricSourcesJar") {
     description = "Creates a combined sources JAR for Fabric"
     
     archiveBaseName.set("EclipseUI-fabric")
-    archiveVersion.set(BuildConfig.getVersionString())
+    archiveVersion.set(BuildConfig.getFabricVersionString())
     archiveClassifier.set("sources")
     
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -139,7 +139,7 @@ tasks.register<Jar>("combinedNeoForgeJar") {
     description = "Creates a combined JAR containing all EclipseUI modules for NeoForge"
     
     archiveBaseName.set("EclipseUI-neoforge")
-    archiveVersion.set(BuildConfig.getVersionString())
+    archiveVersion.set(BuildConfig.getNeoForgeVersionString())
     archiveClassifier.set("")
     
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -182,7 +182,7 @@ tasks.register<Jar>("combinedNeoForgeJar") {
     manifest {
         attributes(
             "Implementation-Title" to BuildConfig.MOD_NAME,
-            "Implementation-Version" to BuildConfig.getVersionString(),
+            "Implementation-Version" to BuildConfig.getNeoForgeVersionString(),
             "Implementation-Vendor" to BuildConfig.MOD_AUTHOR
         )
     }
@@ -193,7 +193,7 @@ tasks.register<Jar>("combinedNeoForgeSourcesJar") {
     description = "Creates a combined sources JAR for NeoForge"
     
     archiveBaseName.set("EclipseUI-neoforge")
-    archiveVersion.set(BuildConfig.getVersionString())
+    archiveVersion.set(BuildConfig.getNeoForgeVersionString())
     archiveClassifier.set("sources")
     
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -267,7 +267,7 @@ publishing {
         create<MavenPublication>("fabric") {
             groupId = "com.github.coredex-source"
             artifactId = "EclipseUI-fabric"
-            version = project.version.toString()
+            version = BuildConfig.getFabricVersionString()
             
             artifact(tasks.named("combinedFabricJar"))
             artifact(tasks.named("combinedFabricSourcesJar"))
@@ -282,7 +282,7 @@ publishing {
         create<MavenPublication>("neoforge") {
             groupId = "com.github.coredex-source"
             artifactId = "EclipseUI-neoforge"
-            version = project.version.toString()
+            version = BuildConfig.getNeoForgeVersionString()
             
             artifact(tasks.named("combinedNeoForgeJar"))
             artifact(tasks.named("combinedNeoForgeSourcesJar"))

@@ -2,11 +2,21 @@ import java.util.Properties
 import java.io.FileInputStream
 
 object BuildConfig {
-    private fun property(name: String): String {
-        val props = Properties().apply {
+    private val props: Properties by lazy {
+        Properties().apply {
             FileInputStream("gradle.properties").use { load(it) }
         }
+    }
+
+    private fun property(name: String): String {
         return props.getProperty(name)
+            ?: error("Missing required property '$name' in gradle.properties")
+    }
+
+    private fun property(name: String, fallbackName: String): String {
+        return props.getProperty(name)
+            ?: props.getProperty(fallbackName)
+            ?: error("Missing required property '$name' (or fallback '$fallbackName') in gradle.properties")
     }
     
     // Mod info
@@ -32,6 +42,23 @@ object BuildConfig {
         get() = property("minecraft_version_max")
     val MINECRAFT_VERSION_BUILD: String
         get() = property("minecraft_version_build")
+
+    // Fabric-specific Minecraft (falls back to shared minecraft_* keys)
+    val FABRIC_MINECRAFT_VERSION: String
+        get() = property("fabric_minecraft_version", "minecraft_version")
+    val FABRIC_MINECRAFT_VERSION_MAX: String
+        get() = property("fabric_minecraft_version_max", "minecraft_version_max")
+    val FABRIC_MINECRAFT_VERSION_BUILD: String
+        get() = property("fabric_minecraft_version_build", "minecraft_version_build")
+
+    // NeoForge-specific Minecraft (falls back to shared minecraft_* keys)
+    val NEOFORGE_MINECRAFT_VERSION: String
+        get() = property("neoforge_minecraft_version", "minecraft_version")
+    val NEOFORGE_MINECRAFT_VERSION_MAX: String
+        get() = property("neoforge_minecraft_version_max", "minecraft_version_max")
+    val NEOFORGE_MINECRAFT_VERSION_BUILD: String
+        get() = property("neoforge_minecraft_version_build", "minecraft_version_build")
+
     val JAVA_VERSION: Int
         get() = property("java_version").toInt()
     
@@ -52,5 +79,13 @@ object BuildConfig {
     // Build version string
     fun getVersionString(): String {
         return "$MOD_VERSION+mc$MINECRAFT_VERSION_BUILD"
+    }
+
+    fun getFabricVersionString(): String {
+        return "$MOD_VERSION+mc$FABRIC_MINECRAFT_VERSION_BUILD"
+    }
+
+    fun getNeoForgeVersionString(): String {
+        return "$MOD_VERSION+mc$NEOFORGE_MINECRAFT_VERSION_BUILD"
     }
 }
