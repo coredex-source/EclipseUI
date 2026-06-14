@@ -225,7 +225,7 @@ public class ExampleConfigScreens {
                     .onChange(newTheme -> {
                         // Reopen screen with new theme
                         Minecraft mc = Minecraft.getInstance();
-                        mc.setScreen(createModernScreen(parent));
+                        mc.gui.setScreen(createModernScreen(parent));
                     })
                 )
                 

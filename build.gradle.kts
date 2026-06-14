@@ -9,6 +9,19 @@ val binDir = layout.projectDirectory.dir("bin")
 subprojects {
     apply(plugin = "java")
     
+    repositories {
+        mavenCentral()
+        maven("https://maven.fabricmc.net/")
+        maven {
+            name = "Maven for PR #3198" // https://github.com/neoforged/NeoForge/pull/3198
+            url = uri("https://prmaven.neoforged.net/NeoForge/pr3198")
+            content {
+                includeModule("net.neoforged", "neoforge")
+                includeModule("net.neoforged", "testframework")
+            }
+        }
+    }
+    
     java {
         toolchain {
             languageVersion.set(JavaLanguageVersion.of(BuildConfig.JAVA_VERSION))
