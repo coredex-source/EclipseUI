@@ -1,0 +1,27 @@
+import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+
+plugins {
+    id 'java'
+}
+
+def javaVersion = property('java_version').toString().toInteger()
+
+subprojects {
+    pluginManager.apply 'java'
+
+    extensions.configure(JavaPluginExtension) { JavaPluginExtension javaExtension ->
+        javaExtension.toolchain {
+            languageVersion = JavaLanguageVersion.of(javaVersion)
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+        options.release = javaVersion
+    }
+
+    group = property('mod_group').toString()
+    version = property('mod_version').toString()
+}

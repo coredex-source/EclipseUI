@@ -1,0 +1,35 @@
+pluginManagement {
+    def props = new Properties()
+    file('gradle.properties').withInputStream {
+        props.load(it)
+    }
+
+    repositories {
+        gradlePluginPortal()
+        maven {
+            url = 'https://maven.fabricmc.net/'
+        }
+    }
+
+    plugins {
+        id 'net.fabricmc.fabric-loom' version props.getProperty('fabric_loom_version')
+    }
+}
+
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
+rootProject.name = 'EclipseUI'
+
+// EclipseCore - Core utilities
+include 'eclipse-core:common'
+include 'eclipse-core:fabric'
+
+// EclipsePlatform - Platform abstraction layer
+include 'eclipse-platform:common'
+include 'eclipse-platform:fabric'
+
+// EclipseUI - UI library
+include 'eclipse-ui:common'
+include 'eclipse-ui:fabric'

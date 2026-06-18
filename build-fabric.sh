@@ -1,1 +1,0 @@
-./gradlew :eclipse-core:fabric:build :eclipse-platform:fabric:build :eclipse-ui:fabric:build :combinedFabricJar

@@ -1,0 +1,24 @@
+plugins {
+    id 'net.fabricmc.fabric-loom'
+}
+
+def cfg = rootProject.buildConfig
+
+group = 'dev.eclipseui'
+
+dependencies {
+    minecraft "com.mojang:minecraft:${cfg.minecraftVersion}"
+    implementation "net.fabricmc:fabric-loader:${cfg.fabricLoaderVersion}"
+
+    // Depend on EclipseCore and EclipsePlatform
+    implementation project(':eclipse-core:common')
+    implementation project(':eclipse-platform:common')
+}
+
+loom {
+    // Common module - source code only, bundled into platform-specific jars
+}
+
+base {
+    archivesName = 'EclipseUI-common'
+}

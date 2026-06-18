@@ -1,0 +1,170 @@
+import net.fabricmc.loom.api.LoomGradleExtensionAPI
+
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'net.fabricmc.fabric-loom'
+}
+
+ext.buildConfig = [
+        modId: property('mod_id').toString(),
+        modName: property('mod_name').toString(),
+        modVersion: property('mod_version').toString(),
+        modGroup: property('mod_group').toString(),
+        modDescription: property('mod_description').toString(),
+        modLicense: property('mod_license').toString(),
+        modAuthor: property('mod_author').toString(),
+        minecraftVersion: property('minecraft_version').toString(),
+        supportedMinecraftVersions: property('supported_minecraft_versions').toString(),
+        javaVersion: property('java_version').toString().toInteger(),
+        fabricLoaderVersion: property('fabric_loader_version').toString(),
+        fabricApiVersion: property('fabric_api_version').toString(),
+        fabricLoomVersion: property('fabric_loom_version').toString()
+]
+ext.fabricVersionString = "${buildConfig.modVersion}+mc${buildConfig.minecraftVersion}"
+
+def cfg = buildConfig
+def binDir = layout.projectDirectory.dir('bin')
+
+configurations {
+    nestedJars {
+        transitive = false
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'Fabric'
+        url = 'https://maven.fabricmc.net/'
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${cfg.minecraftVersion}"
+    implementation "net.fabricmc:fabric-loader:${cfg.fabricLoaderVersion}"
+
+    nestedJars project(':eclipse-core:fabric')
+    nestedJars project(':eclipse-platform:fabric')
+    nestedJars project(':eclipse-ui:fabric')
+}
+
+extensions.configure(JavaPluginExtension) { JavaPluginExtension javaExtension ->
+    javaExtension.toolchain {
+        languageVersion = JavaLanguageVersion.of(cfg.javaVersion)
+    }
+    javaExtension.withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = cfg.javaVersion
+}
+
+group = cfg.modGroup
+version = fabricVersionString
+
+extensions.configure(BasePluginExtension) { BasePluginExtension baseExtension ->
+    baseExtension.archivesName = 'EclipseUI-fabric'
+}
+
+extensions.configure(LoomGradleExtensionAPI) { LoomGradleExtensionAPI loomExtension ->
+    loomExtension.nestJars(tasks.named('jar', Jar), configurations.nestedJars)
+}
+
+tasks.named('processResources') {
+    inputs.property 'version', fabricVersionString
+    inputs.property 'supported_minecraft_versions', cfg.supportedMinecraftVersions
+    inputs.property 'fabric_loader_version', cfg.fabricLoaderVersion
+
+    filesMatching('fabric.mod.json') {
+        expand(
+                version: fabricVersionString,
+                supported_minecraft_versions: cfg.supportedMinecraftVersions,
+                fabric_loader_version: cfg.fabricLoaderVersion
+        )
+    }
+}
+
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
+subprojects {
+    pluginManager.apply 'java'
+
+    repositories {
+        mavenCentral()
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+    }
+
+    extensions.configure(JavaPluginExtension) { JavaPluginExtension javaExtension ->
+        javaExtension.toolchain {
+            languageVersion = JavaLanguageVersion.of(cfg.javaVersion)
+        }
+        javaExtension.withSourcesJar()
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+        options.release = cfg.javaVersion
+    }
+
+    tasks.withType(AbstractArchiveTask).configureEach {
+        preserveFileTimestamps = false
+        reproducibleFileOrder = true
+    }
+
+    group = cfg.modGroup
+    version = rootProject.fabricVersionString
+}
+
+tasks.register('copyToBin', Copy) {
+    group = 'build'
+    description = 'Copies the Fabric aggregate JARs to the bin folder'
+
+    dependsOn 'jar', 'sourcesJar'
+
+    from tasks.named('jar')
+    from tasks.named('sourcesJar')
+
+    into binDir
+}
+
+tasks.register('cleanBin', Delete) {
+    group = 'build'
+    description = 'Cleans the bin folder'
+    delete binDir
+}
+
+tasks.named('clean') {
+    dependsOn 'cleanBin'
+}
+
+tasks.register('buildAll') {
+    group = 'build'
+    description = 'Builds the Fabric aggregate JAR and copies it to the bin folder'
+
+    dependsOn 'build', 'copyToBin'
+}
+
+extensions.configure(PublishingExtension) { PublishingExtension publishingExtension ->
+    publishingExtension.publications.create('fabric', MavenPublication) {
+        groupId = 'com.github.coredex-source'
+        artifactId = 'EclipseUI-fabric'
+        version = rootProject.fabricVersionString
+
+        artifact tasks.named('jar')
+        artifact tasks.named('sourcesJar')
+
+        pom {
+            name = 'EclipseUI Fabric'
+            description = 'A modern, themeable configuration UI library for Minecraft mods (Fabric)'
+            url = 'https://github.com/coredex-source/EclipseUI'
+        }
+    }
+}

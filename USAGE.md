@@ -1,75 +1,48 @@
 # Using EclipseUI in Your Mod
 
-This guide explains how to integrate EclipseUI into your Minecraft mod for both Fabric and NeoForge platforms.
+This guide explains how to integrate EclipseUI into your Fabric mod.
 
 ## Table of Contents
 - [Adding the Dependency](#adding-the-dependency)
-  - [Fabric](#fabric)
-  - [NeoForge](#neoforge)
 - [Basic Usage](#basic-usage)
 - [Advanced Examples](#advanced-examples)
 - [Available Widgets](#available-widgets)
 
 ## Adding the Dependency
 
-EclipseUI is distributed as a single combined JAR that includes all modules (core, platform, and UI). Simply add one dependency to get everything you need.
-
-### Fabric
+EclipseUI is distributed as a Fabric aggregate JAR with its modules nested under `META-INF/jars`, following the same packaging style used by Fabric API.
 
 #### Step 1: Add the repository
 
-In your `build.gradle` or `build.gradle.kts`, add the JitPack repository:
+In your `build.gradle` or `build.gradle.kts`, add the Modrinth Maven repository:
 
-```kotlin
+```groovy
 repositories {
-    maven("https://jitpack.io")
+    maven { url = "https://api.modrinth.com/maven" }
 }
 ```
 
 #### Step 2: Add the dependency
 
-```kotlin
+```groovy
 dependencies {
-    // EclipseUI - Complete UI library (single JAR)
-    implementation("com.github.coredex-source.EclipseUI:EclipseUI-fabric:v1.0.2")
+    // EclipseUI - Complete Fabric UI library
+    implementation "maven.modrinth:eclipseui:${project.eclipseUiVersion}"
     
     // Include in your mod JAR (bundles the library with your mod)
-    include("com.github.coredex-source.EclipseUI:EclipseUI-fabric:v1.0.2")
+    include "maven.modrinth:eclipseui:${project.eclipseUiVersion}"
 }
 ```
 
-> **Note:** Replace `v1.0.2` with the version tag you want to use. You can also use a commit hash or `main-SNAPSHOT` for the latest build.
-
-### NeoForge
-
-#### Step 1: Add the repository
-
-```kotlin
-repositories {
-    maven("https://jitpack.io")
-}
-```
-
-#### Step 2: Add the dependency
-
-```kotlin
-dependencies {
-    // EclipseUI - Complete UI library (single JAR)
-    implementation("com.github.coredex-source.EclipseUI:EclipseUI-neoforge:v1.0.2")
-    
-    // Include in your mod JAR (jar-in-jar)
-    jarJar("com.github.coredex-source.EclipseUI:EclipseUI-neoforge:v1.0.2")
-}
-```
+Set `eclipseUiVersion=1.0.5+mc26.2-rc-2` in `gradle.properties`, or replace it with the EclipseUI version you want to use.
 
 ### Manual Installation
 
 You can also download the JAR directly from [GitHub Releases](https://github.com/coredex-source/EclipseUI/releases) or the workflow artifacts:
 
-| Platform | File |
-|----------|------|
+| Loader | File |
+|--------|------|
 | Fabric | `EclipseUI-fabric-{version}.jar` |
-| NeoForge | `EclipseUI-neoforge-{version}.jar` |
 
 ## Basic Usage
 
@@ -393,7 +366,7 @@ Select a theme when building your config screen:
 
 ## Building from Source
 
-Clone the repository and build combined JARs:
+Clone the repository and build the Fabric aggregate JAR:
 
 ```bash
 git clone https://github.com/coredex-source/EclipseUI.git
@@ -401,9 +374,8 @@ cd EclipseUI
 ./gradlew buildAll
 ```
 
-Combined JARs will be output to the `bin/` directory:
+The aggregate JAR will be output to the `bin/` directory:
 - `bin/EclipseUI-fabric-{version}.jar`
-- `bin/EclipseUI-neoforge-{version}.jar`
 
 ## Tips
 

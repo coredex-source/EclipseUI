@@ -1,6 +1,7 @@
 .dev/
 .gradle/
 .kotlin/
+.idea
 build/
 run/
 bin/

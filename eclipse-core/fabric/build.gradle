@@ -1,0 +1,72 @@
+import org.gradle.api.tasks.SourceSetContainer
+import org.gradle.jvm.tasks.Jar
+
+plugins {
+    id 'net.fabricmc.fabric-loom'
+}
+
+def cfg = rootProject.buildConfig
+def commonSourceSet = project(':eclipse-core:common')
+        .extensions
+        .getByType(SourceSetContainer)
+        .named('main')
+
+group = 'dev.eclipsecore'
+
+dependencies {
+    minecraft "com.mojang:minecraft:${cfg.minecraftVersion}"
+    implementation "net.fabricmc:fabric-loader:${cfg.fabricLoaderVersion}"
+    implementation project(':eclipse-core:common')
+}
+
+loom {
+    // No runs needed - this is a library
+}
+
+tasks.named('processResources') {
+    inputs.property 'version', rootProject.fabricVersionString
+    inputs.property 'supported_minecraft_versions', cfg.supportedMinecraftVersions
+    inputs.property 'fabric_loader_version', cfg.fabricLoaderVersion
+
+    filesMatching('fabric.mod.json') {
+        expand(
+                version: rootProject.fabricVersionString,
+                supported_minecraft_versions: cfg.supportedMinecraftVersions,
+                fabric_loader_version: cfg.fabricLoaderVersion
+        )
+    }
+}
+
+base {
+    archivesName = 'EclipseCore'
+}
+
+tasks.named('jar', Jar) {
+    from commonSourceSet.get().output
+    archiveBaseName = 'EclipseCore'
+    archiveVersion = "${cfg.modVersion}-fabric-${cfg.minecraftVersion}"
+    archiveClassifier = ''
+}
+
+tasks.configureEach {
+    if (name == 'remapJar' && it instanceof Jar) {
+        archiveBaseName = 'EclipseCore'
+        archiveVersion = "${cfg.modVersion}-fabric-${cfg.minecraftVersion}"
+        archiveClassifier = ''
+    }
+}
+
+tasks.named('sourcesJar', Jar) {
+    from commonSourceSet.get().allSource
+    archiveBaseName = 'EclipseCore'
+    archiveVersion = "${cfg.modVersion}-fabric-${cfg.minecraftVersion}"
+    archiveClassifier = 'sources'
+}
+
+tasks.configureEach {
+    if (name == 'remapSourcesJar' && it instanceof Jar) {
+        archiveBaseName = 'EclipseCore'
+        archiveVersion = "${cfg.modVersion}-fabric-${cfg.minecraftVersion}"
+        archiveClassifier = 'sources'
+    }
+}

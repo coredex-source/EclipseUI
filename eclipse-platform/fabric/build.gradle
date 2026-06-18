@@ -1,0 +1,75 @@
+import org.gradle.api.tasks.SourceSetContainer
+import org.gradle.jvm.tasks.Jar
+
+plugins {
+    id 'net.fabricmc.fabric-loom'
+}
+
+def cfg = rootProject.buildConfig
+def commonSourceSet = project(':eclipse-platform:common')
+        .extensions
+        .getByType(SourceSetContainer)
+        .named('main')
+
+group = 'dev.eclipseplatform'
+
+dependencies {
+    minecraft "com.mojang:minecraft:${cfg.minecraftVersion}"
+    implementation "net.fabricmc:fabric-loader:${cfg.fabricLoaderVersion}"
+
+    // Depend on EclipseCore (separate jar)
+    implementation project(':eclipse-core:common')
+    implementation project(':eclipse-platform:common')
+}
+
+loom {
+    // No runs needed - this is a library
+}
+
+tasks.named('processResources') {
+    inputs.property 'version', rootProject.fabricVersionString
+    inputs.property 'supported_minecraft_versions', cfg.supportedMinecraftVersions
+    inputs.property 'fabric_loader_version', cfg.fabricLoaderVersion
+
+    filesMatching('fabric.mod.json') {
+        expand(
+                version: rootProject.fabricVersionString,
+                supported_minecraft_versions: cfg.supportedMinecraftVersions,
+                fabric_loader_version: cfg.fabricLoaderVersion
+        )
+    }
+}
+
+base {
+    archivesName = 'EclipsePlatform'
+}
+
+tasks.named('jar', Jar) {
+    from commonSourceSet.get().output
+    archiveBaseName = 'EclipsePlatform'
+    archiveVersion = "${cfg.modVersion}-fabric-${cfg.minecraftVersion}"
+    archiveClassifier = ''
+}
+
+tasks.configureEach {
+    if (name == 'remapJar' && it instanceof Jar) {
+        archiveBaseName = 'EclipsePlatform'
+        archiveVersion = "${cfg.modVersion}-fabric-${cfg.minecraftVersion}"
+        archiveClassifier = ''
+    }
+}
+
+tasks.named('sourcesJar', Jar) {
+    from commonSourceSet.get().allSource
+    archiveBaseName = 'EclipsePlatform'
+    archiveVersion = "${cfg.modVersion}-fabric-${cfg.minecraftVersion}"
+    archiveClassifier = 'sources'
+}
+
+tasks.configureEach {
+    if (name == 'remapSourcesJar' && it instanceof Jar) {
+        archiveBaseName = 'EclipsePlatform'
+        archiveVersion = "${cfg.modVersion}-fabric-${cfg.minecraftVersion}"
+        archiveClassifier = 'sources'
+    }
+}

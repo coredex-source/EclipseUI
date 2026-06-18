@@ -4,7 +4,7 @@ A lightweight, themeable config screen library for Minecraft mods.
 
 ## Features
 
-- **Fabric & NeoForge** support (1.21.9+)
+- **Fabric** support
 - **Two themes**: Faithful (vanilla style) & Modern (flat design)
 - **Rich widgets**: toggles, sliders, dropdowns, color pickers, text fields
 - **ModMenu** integration out of the box
@@ -17,17 +17,13 @@ Add EclipseUI to your mod by following the [Usage Guide](USAGE.md).
 
 **Quick dependency setup:**
 
-```kotlin
+```groovy
 repositories {
-    maven("https://jitpack.io")
+    maven { url = "https://api.modrinth.com/maven" }
 }
 
 dependencies {
-    // Fabric
-    implementation("com.github.coredex-source.EclipseUI:EclipseUI-fabric:v1.0.2")
-    
-    // NeoForge
-    implementation("com.github.coredex-source.EclipseUI:EclipseUI-neoforge:v1.0.2")
+    implementation "maven.modrinth:eclipseui:${project.eclipseUiVersion}"
 }
 ```
 

@@ -1,0 +1,61 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version '1.16-SNAPSHOT'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url = 'https://maven.fabricmc.net/'
+    }
+    maven {
+        url = 'https://maven.terraformersmc.com/'
+    }
+    maven {
+        url = 'https://api.modrinth.com/maven'
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${property('minecraft_version')}"
+
+    implementation "net.fabricmc:fabric-loader:${property('fabric_loader_version')}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${property('fabric_api_version')}"
+
+    // ModMenu integration
+    implementation 'com.terraformersmc:modmenu:18.0.0-alpha.5'
+
+    // EclipseUI from Modrinth Maven
+    implementation "maven.modrinth:eclipseui:${property('eclipseUiVersion')}"
+}
+
+loom {
+    runs {
+        client {
+            client()
+            configName = 'TestMod Fabric Client'
+            ideConfigGenerated true
+        }
+    }
+}
+
+tasks.named('processResources') {
+    def modVersion = project.property('mod_version').toString()
+    def minecraftVersion = project.property('minecraft_version').toString()
+    def fabricLoaderVersion = project.property('fabric_loader_version').toString()
+
+    inputs.property 'version', modVersion
+    inputs.property 'minecraft_version', minecraftVersion
+    inputs.property 'fabric_loader_version', fabricLoaderVersion
+
+    filesMatching('fabric.mod.json') {
+        expand(
+                version: modVersion,
+                minecraft_version: minecraftVersion,
+                fabric_loader_version: fabricLoaderVersion
+        )
+    }
+}
+
+base {
+    archivesName = 'EclipseUI-TestMod-fabric'
+}
