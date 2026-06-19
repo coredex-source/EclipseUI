@@ -4,7 +4,7 @@ import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import dev.eclipseui.EclipseUI;
 import dev.eclipseui.api.Theme;
-import dev.eclipseui.fabric.example.ExampleConfigScreens;
+import dev.eclipseui.example.ExampleConfigScreens;
 import net.minecraft.network.chat.Component;
 
 import java.util.HashMap;

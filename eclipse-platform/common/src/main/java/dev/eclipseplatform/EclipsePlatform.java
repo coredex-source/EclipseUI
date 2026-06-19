@@ -17,6 +17,7 @@ public final class EclipsePlatform {
     
     public enum Platform {
         FABRIC,
+        NEOFORGE,
         UNKNOWN
     }
     
@@ -30,7 +31,12 @@ public final class EclipsePlatform {
             Class.forName("net.fabricmc.loader.api.FabricLoader");
             currentPlatform = Platform.FABRIC;
         } catch (ClassNotFoundException e) {
-            currentPlatform = Platform.UNKNOWN;
+            try {
+                Class.forName("net.neoforged.fml.ModList");
+                currentPlatform = Platform.NEOFORGE;
+            } catch (ClassNotFoundException ignored) {
+                currentPlatform = Platform.UNKNOWN;
+            }
         }
         
         LOGGER.info("EclipsePlatform initialized on {}", currentPlatform);
@@ -42,6 +48,10 @@ public final class EclipsePlatform {
     
     public static boolean isFabric() {
         return currentPlatform == Platform.FABRIC;
+    }
+
+    public static boolean isNeoForge() {
+        return currentPlatform == Platform.NEOFORGE;
     }
     
     public static boolean isInitialized() {

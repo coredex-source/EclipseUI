@@ -6,30 +6,47 @@ pluginManagement {
 
     repositories {
         gradlePluginPortal()
+        mavenCentral()
         maven {
+            name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
+        }
+        maven {
+            name = 'NeoForge'
+            url = 'https://maven.neoforged.net/releases/'
+        }
+        maven {
+            name = 'KikuGie'
+            url = 'https://maven.kikugie.dev/releases'
+        }
+        maven {
+            name = 'KikuGie Snapshots'
+            url = 'https://maven.kikugie.dev/snapshots'
+        }
+        maven {
+            name = 'isXander'
+            url = 'https://maven.isxander.dev/releases'
         }
     }
 
     plugins {
-        id 'net.fabricmc.fabric-loom' version props.getProperty('fabric_loom_version')
+        id 'dev.kikugie.stonecutter' version props.getProperty('stonecutter_version')
+        id 'dev.isxander.modstitch.base' version props.getProperty('modstitch_version')
     }
 }
 
 plugins {
+    id 'dev.kikugie.stonecutter'
     id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
 
+stonecutter {
+    centralScript = 'build.gradle'
+    create(rootProject) {
+        vers '26.2-fabric', '26.2'
+        vers '26.2-neoforge', '26.2'
+        vcsVersion = '26.2-fabric'
+    }
+}
+
 rootProject.name = 'EclipseUI'
-
-// EclipseCore - Core utilities
-include 'eclipse-core:common'
-include 'eclipse-core:fabric'
-
-// EclipsePlatform - Platform abstraction layer
-include 'eclipse-platform:common'
-include 'eclipse-platform:fabric'
-
-// EclipseUI - UI library
-include 'eclipse-ui:common'
-include 'eclipse-ui:fabric'
