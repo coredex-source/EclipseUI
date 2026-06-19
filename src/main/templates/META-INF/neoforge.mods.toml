@@ -16,7 +16,7 @@ displayTest = "IGNORE_ALL_VERSION"
 [[dependencies.${mod_id}]]
 modId = "neoforge"
 type = "required"
-versionRange = "[${neoforge_version},)"
+versionRange = "${neoforge_version_range}"
 ordering = "NONE"
 side = "CLIENT"
 

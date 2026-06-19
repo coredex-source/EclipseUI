@@ -21,6 +21,7 @@ ext.buildConfig = [
         fabricApiVersion: property('deps.fabric_api').toString(),
         modMenuVersion: property('deps.modmenu').toString(),
         neoForgeVersion: findProperty('deps.neoforge')?.toString(),
+        neoForgeVersionRange: findProperty('neoforge_version_range')?.toString(),
 ]
 
 ext.platformName = property('modstitch.platform').toString()
@@ -65,6 +66,7 @@ modstitch {
         replacementProperties.put('minecraft_version_range', cfg.minecraftVersionRange)
         replacementProperties.put('java_version', cfg.javaVersion.toString())
         replacementProperties.put('neoforge_version', cfg.neoForgeVersion ?: '')
+        replacementProperties.put('neoforge_version_range', cfg.neoForgeVersionRange ?: (cfg.neoForgeVersion ? "[${cfg.neoForgeVersion},)" : ''))
     }
 
     loom {
@@ -126,6 +128,7 @@ tasks.named('processResources') {
     inputs.property 'mod_name', cfg.modName
     inputs.property 'mod_version', activeVersionString
     inputs.property 'neoforge_version', cfg.neoForgeVersion ?: ''
+    inputs.property 'neoforge_version_range', cfg.neoForgeVersionRange ?: (cfg.neoForgeVersion ? "[${cfg.neoForgeVersion},)" : '')
     inputs.property 'supported_minecraft_versions', cfg.supportedMinecraftVersions
 
     filesMatching(['fabric.mod.json', 'META-INF/neoforge.mods.toml']) {
@@ -141,6 +144,7 @@ tasks.named('processResources') {
                 mod_name: cfg.modName,
                 mod_version: activeVersionString,
                 neoforge_version: cfg.neoForgeVersion ?: '',
+                neoforge_version_range: cfg.neoForgeVersionRange ?: (cfg.neoForgeVersion ? "[${cfg.neoForgeVersion},)" : ''),
                 supported_minecraft_versions: cfg.supportedMinecraftVersions,
         )
     }
