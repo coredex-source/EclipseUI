@@ -32,6 +32,7 @@ pluginManagement {
     plugins {
         id 'dev.kikugie.stonecutter' version props.getProperty('stonecutter_version')
         id 'dev.isxander.modstitch.base' version props.getProperty('modstitch_version')
+        id 'net.fabricmc.fabric-loom' version props.getProperty('fabric_loom_version')
     }
 }
 
