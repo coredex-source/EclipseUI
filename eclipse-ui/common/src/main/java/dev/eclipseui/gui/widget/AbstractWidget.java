@@ -11,11 +11,16 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 
+import java.lang.reflect.Method;
+
 /**
  * Base widget class for EclipseUI, inspired by Sodium's widget architecture.
  * Uses Dim2i for positioning instead of separate x/y/width/height fields.
  */
 public abstract class AbstractWidget implements Renderable, GuiEventListener, NarratableEntry {
+
+    private static final Method KEY_EVENT_SECONDARY_CODE_ACCESSOR =
+            KeyEvent.class.getRecordComponents()[1].getAccessor();
     
     protected Dim2i dim;
     protected ThemeData theme;
@@ -97,7 +102,7 @@ public abstract class AbstractWidget implements Renderable, GuiEventListener, Na
     
     @Override
     public boolean keyPressed(KeyEvent event) {
-        return this.onKeyPressed(event.key(), event.scancode(), event.modifiers());
+        return this.onKeyPressed(event.key(), getSecondaryKeyCode(event), event.modifiers());
     }
     
     protected boolean onKeyPressed(int keyCode, int scanCode, int modifiers) {
@@ -106,7 +111,15 @@ public abstract class AbstractWidget implements Renderable, GuiEventListener, Na
     
     @Override
     public boolean keyReleased(KeyEvent event) {
-        return this.onKeyReleased(event.key(), event.scancode(), event.modifiers());
+        return this.onKeyReleased(event.key(), getSecondaryKeyCode(event), event.modifiers());
+    }
+
+    private static int getSecondaryKeyCode(KeyEvent event) {
+        try {
+            return (int) KEY_EVENT_SECONDARY_CODE_ACCESSOR.invoke(event);
+        } catch (ReflectiveOperationException exception) {
+            throw new IllegalStateException("Unable to read the secondary key code", exception);
+        }
     }
     
     protected boolean onKeyReleased(int keyCode, int scanCode, int modifiers) {
