@@ -1,1 +1,1 @@
-./gradlew clean cleanBin buildAll
+CI=true ./gradlew clean cleanBin buildAll

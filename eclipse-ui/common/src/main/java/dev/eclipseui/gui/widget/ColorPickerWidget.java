@@ -5,6 +5,7 @@ import dev.eclipseui.gui.theme.Colors;
 import dev.eclipseui.gui.screen.ColorPickerEditScreen;
 import dev.eclipseui.util.Dim2i;
 import dev.eclipseui.util.MinecraftScreenCompat;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarratedElementType;
@@ -157,7 +158,7 @@ public class ColorPickerWidget extends OptionWidget {
     
     @Override
     protected boolean onMouseClicked(double mouseX, double mouseY, int button) {
-        if (button != 0 || !this.enabled) return false;
+        if (button != InputConstants.MOUSE_BUTTON_LEFT || !this.enabled) return false;
         
         Dim2i controlDim = getControlDim();
         int previewSize = theme.useVanillaWidgets() ? 20 : 16;

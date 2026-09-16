@@ -2,6 +2,7 @@ package dev.eclipseui.gui.widget;
 
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarratedElementType;
@@ -294,7 +295,7 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
     
     @Override
     protected boolean onMouseClicked(double mouseX, double mouseY, int button) {
-        if (button != 0 || !this.enabled) return false;
+        if (button != InputConstants.MOUSE_BUTTON_LEFT || !this.enabled) return false;
         
         Dim2i controlDim = getControlDim();
         // Use correct dimensions based on theme
@@ -373,7 +374,7 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
     
     @Override
     public boolean handleExpandedClick(double mouseX, double mouseY, int button) {
-        if (!this.expanded || this.enumClass == null || button != 0 || !this.enabled) {
+        if (!this.expanded || this.enumClass == null || button != InputConstants.MOUSE_BUTTON_LEFT || !this.enabled) {
             return false;
         }
         

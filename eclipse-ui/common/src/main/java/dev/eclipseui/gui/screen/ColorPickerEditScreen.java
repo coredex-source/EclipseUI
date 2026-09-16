@@ -3,6 +3,7 @@ package dev.eclipseui.gui.screen;
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.gui.theme.Colors;
 import dev.eclipseui.util.MinecraftScreenCompat;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
@@ -285,7 +286,7 @@ public class ColorPickerEditScreen extends Screen {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-        if (event.button() != 0) {
+        if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) {
             return super.mouseClicked(event, doubleClick);
         }
 

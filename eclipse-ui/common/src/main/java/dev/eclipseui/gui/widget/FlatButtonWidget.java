@@ -2,6 +2,7 @@ package dev.eclipseui.gui.widget;
 
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarratedElementType;
@@ -114,7 +115,7 @@ public class FlatButtonWidget extends AbstractWidget {
     
     @Override
     protected boolean onMouseClicked(double mouseX, double mouseY, int button) {
-        if (button == 0 && this.onClick != null) {
+        if (button == InputConstants.MOUSE_BUTTON_LEFT && this.onClick != null) {
             this.onClick.accept(this);
             return true;
         }

@@ -2,6 +2,7 @@ package dev.eclipseui.gui.widget;
 
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarratedElementType;
@@ -196,7 +197,7 @@ public class TextFieldWidget extends OptionWidget {
     
     @Override
     protected boolean onMouseClicked(double mouseX, double mouseY, int button) {
-        if (button == 0 && this.enabled) {
+        if (button == InputConstants.MOUSE_BUTTON_LEFT && this.enabled) {
             Dim2i controlDim = getControlDim();
             int fieldHeight = 16;
             int fieldY = controlDim.getCenterY() - (fieldHeight / 2);
