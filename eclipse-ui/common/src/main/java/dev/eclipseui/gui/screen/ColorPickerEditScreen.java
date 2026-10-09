@@ -11,7 +11,6 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -99,7 +98,7 @@ public class ColorPickerEditScreen extends Screen {
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
 
-        float progress = Mth.clamp((openTicks + delta) / 10f, 0f, 1f);
+        float progress = Math.clamp((openTicks + delta) / 10f, 0f, 1f);
         float eased = 1f - (1f - progress) * (1f - progress);
 
         int overlayAlpha = (int) (0xB0 * eased);
@@ -530,10 +529,10 @@ public class ColorPickerEditScreen extends Screen {
             throw new IllegalArgumentException("ARGB requires four components");
         }
 
-        int a = Mth.clamp(Integer.parseInt(parts[0]), 0, 255);
-        int r = Mth.clamp(Integer.parseInt(parts[1]), 0, 255);
-        int g = Mth.clamp(Integer.parseInt(parts[2]), 0, 255);
-        int b = Mth.clamp(Integer.parseInt(parts[3]), 0, 255);
+        int a = Math.clamp(Integer.parseInt(parts[0]), 0, 255);
+        int r = Math.clamp(Integer.parseInt(parts[1]), 0, 255);
+        int g = Math.clamp(Integer.parseInt(parts[2]), 0, 255);
+        int b = Math.clamp(Integer.parseInt(parts[3]), 0, 255);
         return Colors.argb(allowAlpha ? a : 255, r, g, b);
     }
 
@@ -543,18 +542,18 @@ public class ColorPickerEditScreen extends Screen {
     }
 
     private void updateSV(double mouseX, double mouseY, int svX, int svY, int svSize) {
-        saturation = Mth.clamp((float) ((mouseX - svX) / svSize), 0f, 1f);
-        value = Mth.clamp(1f - (float) ((mouseY - svY) / svSize), 0f, 1f);
+        saturation = Math.clamp((float) ((mouseX - svX) / svSize), 0f, 1f);
+        value = Math.clamp(1f - (float) ((mouseY - svY) / svSize), 0f, 1f);
         setColor(hsvToColor());
     }
 
     private void updateHue(double mouseY, int svY, int svSize) {
-        hue = Mth.clamp((float) ((mouseY - svY) / svSize) * 360f, 0f, 360f);
+        hue = Math.clamp((float) ((mouseY - svY) / svSize) * 360f, 0f, 360f);
         setColor(hsvToColor());
     }
 
     private void updateAlpha(double mouseY, int svY, int svSize) {
-        float t = Mth.clamp((float) ((mouseY - svY) / svSize), 0f, 1f);
+        float t = Math.clamp((float) ((mouseY - svY) / svSize), 0f, 1f);
         int alpha = 255 - (int) (t * 255f);
         currentColor = (currentColor & 0x00FFFFFF) | (alpha << 24);
         setter.accept(currentColor);
@@ -661,7 +660,7 @@ public class ColorPickerEditScreen extends Screen {
         int contentWidth = panelWidth - 20;
 
         int rightGap = 12;
-        int rightWidth = Mth.clamp(contentWidth / 3, 112, 184);
+        int rightWidth = Math.clamp(contentWidth / 3, 112, 184);
         int leftMinWidth = allowAlpha ? 96 : 82;
         int maxRightWidth = Math.max(96, contentWidth - rightGap - leftMinWidth);
         rightWidth = Math.min(rightWidth, maxRightWidth);

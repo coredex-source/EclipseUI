@@ -8,7 +8,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -118,7 +117,7 @@ public class SliderWidget extends OptionWidget {
     public void setValue(double value) {
         if (this.setter != null) {
             double oldValue = getValue();
-            double newValue = snapToStep(Mth.clamp(value, min, max));
+            double newValue = snapToStep(Math.clamp(value, min, max));
             this.setter.accept(newValue);
             
             if (oldValue != newValue) {
@@ -272,7 +271,7 @@ public class SliderWidget extends OptionWidget {
         }
         
         double progress = (mouseX - sliderStartX) / sliderTrackWidth;
-        progress = Mth.clamp(progress, 0, 1);
+        progress = Math.clamp(progress, 0, 1);
         
         double value = min + (max - min) * progress;
         setValue(value);

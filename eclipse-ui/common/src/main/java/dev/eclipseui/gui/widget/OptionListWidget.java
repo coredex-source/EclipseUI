@@ -280,7 +280,7 @@ public class OptionListWidget extends AbstractWidget {
             
             int thumbY = (int) mouseY - scrollbarDragOffset - dim.y();
             float scrollProgress = trackHeight > 0 ? (float) thumbY / trackHeight : 0;
-            scrollProgress = Mth.clamp(scrollProgress, 0, 1);
+            scrollProgress = Math.clamp(scrollProgress, 0, 1);
             
             targetScrollOffset = scrollProgress * getMaxScroll();
             scrollOffset = targetScrollOffset;
@@ -300,7 +300,7 @@ public class OptionListWidget extends AbstractWidget {
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         if (dim.containsCursor(mouseX, mouseY) && hasScrollbar()) {
             targetScrollOffset -= verticalAmount * 20;
-            targetScrollOffset = Mth.clamp(targetScrollOffset, 0, getMaxScroll());
+            targetScrollOffset = Math.clamp(targetScrollOffset, 0, getMaxScroll());
             return true;
         }
         return false;

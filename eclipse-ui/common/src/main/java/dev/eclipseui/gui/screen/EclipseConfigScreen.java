@@ -15,7 +15,6 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -111,7 +110,7 @@ public class EclipseConfigScreen extends Screen {
         
         // Populate initial category
         if (!categories.isEmpty()) {
-            currentCategory = Mth.clamp(currentCategory, 0, categories.size() - 1);
+            currentCategory = Math.clamp(currentCategory, 0, categories.size() - 1);
             categoryList.setSelectedIndex(currentCategory);
         }
         
