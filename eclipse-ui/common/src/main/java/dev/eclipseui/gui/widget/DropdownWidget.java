@@ -2,6 +2,7 @@ package dev.eclipseui.gui.widget;
 
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
+import dev.eclipseui.util.GuiGraphicsCompat;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -132,7 +133,7 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
                 ? (this.hovered ? net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_highlighted") 
                     : net.minecraft.resources.Identifier.withDefaultNamespace("widget/button"))
                 : net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_disabled");
-            graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, sprite, buttonX, buttonY, buttonWidth, buttonHeight);
+            GuiGraphicsCompat.blitSprite(graphics, sprite, buttonX, buttonY, buttonWidth, buttonHeight);
             
             // Draw current value centered with shadow
             Component displayText = getDisplayText(getValue());
@@ -233,11 +234,11 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
                     this.hoveredIndex = i;
                     // Use vanilla button highlighted sprite for hovered items
                     net.minecraft.resources.Identifier sprite = net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_highlighted");
-                    graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, sprite, buttonX, itemY, buttonWidth, itemHeight);
+                    GuiGraphicsCompat.blitSprite(graphics, sprite, buttonX, itemY, buttonWidth, itemHeight);
                 } else if (isSelected) {
                     // Use regular button for selected
                     net.minecraft.resources.Identifier sprite = net.minecraft.resources.Identifier.withDefaultNamespace("widget/button");
-                    graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, sprite, buttonX, itemY, buttonWidth, itemHeight);
+                    GuiGraphicsCompat.blitSprite(graphics, sprite, buttonX, itemY, buttonWidth, itemHeight);
                 } else {
                     // Draw dark background for unselected items
                     fillRect(graphics, buttonX, itemY, buttonWidth, itemHeight, 0xFF2B2B2B);

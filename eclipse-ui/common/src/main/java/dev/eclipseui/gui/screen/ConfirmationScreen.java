@@ -1,5 +1,6 @@
 package dev.eclipseui.gui.screen;
 
+import dev.eclipseui.util.ScreenCompat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
@@ -11,7 +12,7 @@ import java.util.function.Consumer;
 /**
  * A simple confirmation dialog screen.
  */
-public class ConfirmationScreen extends Screen {
+public class ConfirmationScreen extends ScreenCompat {
     
     private final Screen parent;
     private final Component message;

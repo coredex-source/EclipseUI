@@ -2,6 +2,7 @@ package dev.eclipseui.gui.widget;
 
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
+import dev.eclipseui.util.GuiGraphicsCompat;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -114,7 +115,7 @@ public class ToggleWidget extends OptionWidget {
             net.minecraft.resources.Identifier sprite = this.enabled 
                 ? net.minecraft.resources.Identifier.withDefaultNamespace("widget/button")
                 : net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_disabled");
-            graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, sprite, buttonX, buttonY, buttonWidth, buttonHeight);
+            GuiGraphicsCompat.blitSprite(graphics, sprite, buttonX, buttonY, buttonWidth, buttonHeight);
             
             // Draw text centered with shadow
             Component text = value ? this.onText : this.offText;

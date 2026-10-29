@@ -3,6 +3,7 @@ package dev.eclipseui.gui.screen;
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.gui.theme.Colors;
 import dev.eclipseui.util.MinecraftScreenCompat;
+import dev.eclipseui.util.ScreenCompat;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -15,7 +16,7 @@ import net.minecraft.network.chat.Component;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class ColorPickerEditScreen extends Screen {
+public class ColorPickerEditScreen extends ScreenCompat {
 
     private enum FocusedInput {
         NONE,

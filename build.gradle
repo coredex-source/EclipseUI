@@ -90,6 +90,9 @@ sourceSets {
         java.srcDir rootDir.dir('eclipse-platform/common/src/main/java')
         java.srcDir rootDir.dir('eclipse-ui/common/src/main/java')
 
+        def compatVersion = stonecutter.eval(stonecutter.current.version, '>=26.4') ? '26.4' : '26.1'
+        java.srcDir rootDir.dir("eclipse-ui/compat/${compatVersion}/src/main/java")
+
         resources.srcDir rootDir.dir('src/main/resources')
         resources.srcDir rootDir.dir('src/main/templates')
         resources.srcDir rootDir.dir('eclipse-ui/common/src/main/resources')

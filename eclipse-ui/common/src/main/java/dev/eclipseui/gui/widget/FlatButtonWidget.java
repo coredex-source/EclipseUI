@@ -2,12 +2,12 @@ package dev.eclipseui.gui.widget;
 
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
+import dev.eclipseui.util.GuiGraphicsCompat;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
@@ -71,7 +71,7 @@ public class FlatButtonWidget extends AbstractWidget {
         }
         
         // Draw the button using vanilla 9-slice sprite
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, dim.x(), dim.y(), dim.width(), dim.height());
+        GuiGraphicsCompat.blitSprite(graphics, sprite, dim.x(), dim.y(), dim.width(), dim.height());
         
         // Draw text centered
         int textWidth = font.width(this.text);

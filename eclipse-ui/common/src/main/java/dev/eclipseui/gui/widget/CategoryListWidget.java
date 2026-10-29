@@ -2,6 +2,7 @@ package dev.eclipseui.gui.widget;
 
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
+import dev.eclipseui.util.GuiGraphicsCompat;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -81,10 +82,10 @@ public class CategoryListWidget extends AbstractWidget {
                 // Vanilla style - use button sprites for selected/hovered
                 if (isSelected) {
                     net.minecraft.resources.Identifier sprite = net.minecraft.resources.Identifier.withDefaultNamespace("widget/button");
-                    graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, sprite, dim.x() + 2, itemY + 1, dim.width() - 4, ITEM_HEIGHT - 2);
+                    GuiGraphicsCompat.blitSprite(graphics, sprite, dim.x() + 2, itemY + 1, dim.width() - 4, ITEM_HEIGHT - 2);
                 } else if (isHovered) {
                     net.minecraft.resources.Identifier sprite = net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_highlighted");
-                    graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, sprite, dim.x() + 2, itemY + 1, dim.width() - 4, ITEM_HEIGHT - 2);
+                    GuiGraphicsCompat.blitSprite(graphics, sprite, dim.x() + 2, itemY + 1, dim.width() - 4, ITEM_HEIGHT - 2);
                 }
                 
                 // Text centered with shadow

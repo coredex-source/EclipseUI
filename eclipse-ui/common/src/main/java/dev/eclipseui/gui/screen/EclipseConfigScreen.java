@@ -7,6 +7,7 @@ import dev.eclipseui.gui.theme.ThemeRegistry;
 import dev.eclipseui.gui.widget.*;
 import dev.eclipseui.util.Dim2i;
 import dev.eclipseui.util.MinecraftScreenCompat;
+import dev.eclipseui.util.ScreenCompat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Tooltip;
@@ -23,7 +24,7 @@ import java.util.List;
 /**
  * Main configuration screen for EclipseUI.
  */
-public class EclipseConfigScreen extends Screen {
+public class EclipseConfigScreen extends ScreenCompat {
     
     private final @Nullable Screen parent;
     private final ThemeData theme;

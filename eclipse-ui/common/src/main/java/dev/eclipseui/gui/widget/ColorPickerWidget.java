@@ -4,6 +4,7 @@ import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.gui.theme.Colors;
 import dev.eclipseui.gui.screen.ColorPickerEditScreen;
 import dev.eclipseui.util.Dim2i;
+import dev.eclipseui.util.GuiGraphicsCompat;
 import dev.eclipseui.util.MinecraftScreenCompat;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
@@ -140,7 +141,7 @@ public class ColorPickerWidget extends OptionWidget {
             net.minecraft.resources.Identifier sprite = this.hovered 
                 ? net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_highlighted")
                 : net.minecraft.resources.Identifier.withDefaultNamespace("widget/button");
-            graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, sprite, previewX, previewY, previewSize, previewSize);
+            GuiGraphicsCompat.blitSprite(graphics, sprite, previewX, previewY, previewSize, previewSize);
             // Draw color swatch inside with 2px padding
             fillRect(graphics, previewX + 2, previewY + 2, previewSize - 4, previewSize - 4, color);
         } else {

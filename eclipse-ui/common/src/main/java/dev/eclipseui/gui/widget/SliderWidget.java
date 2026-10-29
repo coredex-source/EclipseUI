@@ -2,6 +2,7 @@ package dev.eclipseui.gui.widget;
 
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
+import dev.eclipseui.util.GuiGraphicsCompat;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -184,7 +185,7 @@ public class SliderWidget extends OptionWidget {
             net.minecraft.resources.Identifier sprite = this.enabled 
                 ? net.minecraft.resources.Identifier.withDefaultNamespace("widget/button")
                 : net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_disabled");
-            graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, sprite, sliderX, sliderY, sliderWidth, sliderHeight);
+            GuiGraphicsCompat.blitSprite(graphics, sprite, sliderX, sliderY, sliderWidth, sliderHeight);
             
             // Draw slider handle
             double progress = getProgress();
@@ -193,7 +194,7 @@ public class SliderWidget extends OptionWidget {
             
             // Draw highlighted section under handle using a lighter button sprite
             net.minecraft.resources.Identifier handleSprite = net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_highlighted");
-            graphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, handleSprite, handleX, sliderY, handleWidth, sliderHeight);
+            GuiGraphicsCompat.blitSprite(graphics, handleSprite, handleX, sliderY, handleWidth, sliderHeight);
             
             // Draw value text centered with shadow
             Component text = getValueText();

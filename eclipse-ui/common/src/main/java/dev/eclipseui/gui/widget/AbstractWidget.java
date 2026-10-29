@@ -2,8 +2,8 @@ package dev.eclipseui.gui.widget;
 
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
+import dev.eclipseui.util.RenderableCompat;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
  * Base widget class for EclipseUI, inspired by Sodium's widget architecture.
  * Uses Dim2i for positioning instead of separate x/y/width/height fields.
  */
-public abstract class AbstractWidget implements Renderable, GuiEventListener, NarratableEntry {
+public abstract class AbstractWidget implements RenderableCompat, GuiEventListener, NarratableEntry {
 
     private static final Method KEY_EVENT_SECONDARY_CODE_ACCESSOR =
             KeyEvent.class.getRecordComponents()[1].getAccessor();
