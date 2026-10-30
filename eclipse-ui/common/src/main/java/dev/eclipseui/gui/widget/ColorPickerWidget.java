@@ -8,7 +8,7 @@ import dev.eclipseui.util.GuiGraphicsCompat;
 import dev.eclipseui.util.MinecraftScreenCompat;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
@@ -124,7 +124,7 @@ public class ColorPickerWidget extends OptionWidget {
     }
 
     @Override
-    protected void renderControl(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+    protected void renderControl(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         Dim2i controlDim = getControlDim();
         var font = Minecraft.getInstance().font;
         
@@ -138,9 +138,9 @@ public class ColorPickerWidget extends OptionWidget {
         
         if (theme.useVanillaWidgets()) {
             // Draw button background first
-            net.minecraft.resources.Identifier sprite = this.hovered 
-                ? net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_highlighted")
-                : net.minecraft.resources.Identifier.withDefaultNamespace("widget/button");
+            net.minecraft.resources.ResourceLocation sprite = this.hovered
+                ? net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button_highlighted")
+                : net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button");
             GuiGraphicsCompat.blitSprite(graphics, sprite, previewX, previewY, previewSize, previewSize);
             // Draw color swatch inside with 2px padding
             fillRect(graphics, previewX + 2, previewY + 2, previewSize - 4, previewSize - 4, color);
@@ -154,7 +154,7 @@ public class ColorPickerWidget extends OptionWidget {
         int textX = previewX + previewSize + 6;
         int textY = controlDim.getCenterY() - (font.lineHeight / 2);
         int textColor = theme.useVanillaWidgets() ? 0xFFE0E0E0 : theme.textSecondary();
-        graphics.text(font, hexText, textX, textY, textColor, theme.useVanillaWidgets());
+        graphics.drawString(font, hexText, textX, textY, textColor, theme.useVanillaWidgets());
     }
     
     @Override

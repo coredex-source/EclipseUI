@@ -5,7 +5,7 @@ import dev.eclipseui.util.Dim2i;
 import dev.eclipseui.util.GuiGraphicsCompat;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -117,7 +117,7 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
     }
     
     @Override
-    protected void renderControl(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+    protected void renderControl(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         Dim2i controlDim = getControlDim();
         var font = Minecraft.getInstance().font;
         
@@ -129,10 +129,10 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
             int buttonWidth = controlDim.width() - 4;
             
             // Draw vanilla button using sprites
-            net.minecraft.resources.Identifier sprite = this.enabled 
-                ? (this.hovered ? net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_highlighted") 
-                    : net.minecraft.resources.Identifier.withDefaultNamespace("widget/button"))
-                : net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_disabled");
+            net.minecraft.resources.ResourceLocation sprite = this.enabled
+                ? (this.hovered ? net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button_highlighted")
+                    : net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button"))
+                : net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button_disabled");
             GuiGraphicsCompat.blitSprite(graphics, sprite, buttonX, buttonY, buttonWidth, buttonHeight);
             
             // Draw current value centered with shadow
@@ -141,7 +141,7 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
             int textX = buttonX + (buttonWidth - textWidth) / 2;
             int textY = buttonY + (buttonHeight - font.lineHeight) / 2;
             int textColor = this.enabled ? 0xFFFFFFFF : 0xFF707070;
-            graphics.text(font, displayText, textX, textY, textColor, true);
+            graphics.drawString(font, displayText, textX, textY, textColor, true);
         } else {
             // Modern flat style dropdown
             int buttonHeight = 16;
@@ -161,12 +161,12 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
             Component displayText = getDisplayText(getValue());
             int textColor = this.enabled ? theme.textPrimary() : theme.textDisabled();
             int textY = buttonY + (buttonHeight - font.lineHeight) / 2;
-            graphics.text(font, displayText, buttonX + 6, textY, textColor, false);
+            graphics.drawString(font, displayText, buttonX + 6, textY, textColor, false);
             
             // Draw dropdown arrow
             String arrow = this.expanded ? "▲" : "▼";
             int arrowX = buttonX + buttonWidth - font.width(arrow) - 6;
-            graphics.text(font, arrow, arrowX, textY, theme.textSecondary(), false);
+            graphics.drawString(font, arrow, arrowX, textY, theme.textSecondary(), false);
         }
         
         // Dropdown items are rendered in renderOverlay to appear on top of other widgets
@@ -196,7 +196,7 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
     }
     
     @Override
-    public void renderOverlay(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+    public void renderOverlay(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         if (!this.expanded || this.enumClass == null) return;
         
         Dim2i controlDim = getControlDim();
@@ -233,11 +233,11 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
                 if (isHovered) {
                     this.hoveredIndex = i;
                     // Use vanilla button highlighted sprite for hovered items
-                    net.minecraft.resources.Identifier sprite = net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_highlighted");
+                    net.minecraft.resources.ResourceLocation sprite = net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button_highlighted");
                     GuiGraphicsCompat.blitSprite(graphics, sprite, buttonX, itemY, buttonWidth, itemHeight);
                 } else if (isSelected) {
                     // Use regular button for selected
-                    net.minecraft.resources.Identifier sprite = net.minecraft.resources.Identifier.withDefaultNamespace("widget/button");
+                    net.minecraft.resources.ResourceLocation sprite = net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button");
                     GuiGraphicsCompat.blitSprite(graphics, sprite, buttonX, itemY, buttonWidth, itemHeight);
                 } else {
                     // Draw dark background for unselected items
@@ -252,7 +252,7 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
                 int textX = buttonX + (buttonWidth - textWidth) / 2;
                 int textY2 = itemY + (itemHeight - font.lineHeight) / 2;
                 int itemTextColor = isSelected ? 0xFFFFFFFF : 0xFFAAAAAA;
-                graphics.text(font, itemText, textX, textY2, itemTextColor, true);
+                graphics.drawString(font, itemText, textX, textY2, itemTextColor, true);
             }
         } else {
             // Modern flat style dropdown overlay
@@ -289,7 +289,7 @@ public class DropdownWidget<E extends Enum<E>> extends OptionWidget {
                 
                 Component itemText = getDisplayText(value);
                 int itemTextColor = isSelected ? theme.textPrimary() : theme.textSecondary();
-                graphics.text(font, itemText, buttonX + 6, itemY + (itemHeight - font.lineHeight) / 2, itemTextColor, false);
+                graphics.drawString(font, itemText, buttonX + 6, itemY + (itemHeight - font.lineHeight) / 2, itemTextColor, false);
             }
         }
     }

@@ -2,9 +2,11 @@
 
 A lightweight, themeable config screen library for Minecraft mods.
 
+This legacy branch supports **Minecraft 1.21.1 only**, on **Fabric and NeoForge**, with Java 21. It is maintained for occasional compatibility updates.
+
 ## Features
 
-- **Fabric** support
+- **Fabric and NeoForge** support
 - **Two themes**: Faithful (vanilla style) & Modern (flat design)
 - **Rich widgets**: toggles, sliders, dropdowns, color pickers, text fields
 - **ModMenu** integration out of the box
@@ -23,7 +25,9 @@ repositories {
 }
 
 dependencies {
-    implementation "maven.modrinth:eclipseui:${project.eclipseUiVersion}"
+    // Fabric
+    modImplementation "maven.modrinth:eclipseui:${project.eclipseUiVersion}"
+    // NeoForge: use implementation instead.
 }
 ```
 
@@ -60,16 +64,30 @@ EclipseUI.configScreen()
 
 ## Building from Source
 
+Use JDK 25 to run Gradle; the build plugins require it. The library targets Java 21, which Gradle resolves through its toolchain configuration.
+
 ```bash
 # Clone the repository
-git clone https://github.com/coredex-source/EclipseUI.git
+git clone --branch legacy-1.21.1 https://github.com/coredex-source/EclipseUI.git
 cd EclipseUI
 
-# Clean build all modules
+# Build both 1.21.1 loaders (Java 21 target)
 ./gradlew clean cleanBin buildAll
 
 # Publish to local Maven
 ./gradlew publishToMavenLocal
+```
+
+Artifacts are written to `bin/`. To build just one loader, use
+`./gradlew :1.21.1-fabric:buildAll` or `./gradlew :1.21.1-neoforge:buildAll`.
+
+The `testmod/` project uses these local JARs. After building the library:
+
+```bash
+cd testmod
+./gradlew build
+./gradlew :fabric:runClient
+# Or: ./gradlew :neoforge:runClient
 ```
 
 ## License

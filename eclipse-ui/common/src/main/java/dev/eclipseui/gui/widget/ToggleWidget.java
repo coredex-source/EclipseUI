@@ -5,7 +5,7 @@ import dev.eclipseui.util.Dim2i;
 import dev.eclipseui.util.GuiGraphicsCompat;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -91,7 +91,7 @@ public class ToggleWidget extends OptionWidget {
     }
     
     @Override
-    protected void renderControl(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+    protected void renderControl(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         Dim2i controlDim = getControlDim();
         boolean value = getValue();
         var font = Minecraft.getInstance().font;
@@ -112,9 +112,9 @@ public class ToggleWidget extends OptionWidget {
             int buttonY = controlDim.getCenterY() - (buttonHeight / 2);
             
             // Draw vanilla button using sprites
-            net.minecraft.resources.Identifier sprite = this.enabled 
-                ? net.minecraft.resources.Identifier.withDefaultNamespace("widget/button")
-                : net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_disabled");
+            net.minecraft.resources.ResourceLocation sprite = this.enabled
+                ? net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button")
+                : net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button_disabled");
             GuiGraphicsCompat.blitSprite(graphics, sprite, buttonX, buttonY, buttonWidth, buttonHeight);
             
             // Draw text centered with shadow
@@ -123,7 +123,7 @@ public class ToggleWidget extends OptionWidget {
             int textX = buttonX + (buttonWidth - textWidth) / 2;
             int textY = buttonY + (buttonHeight - font.lineHeight) / 2;
             int textColor = this.enabled ? (value ? 0xFFFFFFFF : 0xFFAAAAAA) : 0xFF707070;
-            graphics.text(font, text, textX, textY, textColor, true);
+            graphics.drawString(font, text, textX, textY, textColor, true);
         } else {
             // Modern toggle switch style
             int switchWidth = 36;
@@ -151,7 +151,7 @@ public class ToggleWidget extends OptionWidget {
             int textX = switchX + switchWidth + 6;
             int textY = controlDim.getCenterY() - (font.lineHeight / 2);
             int textColor = this.enabled ? theme.textSecondary() : theme.textDisabled();
-            graphics.text(font, text, textX, textY, textColor, false);
+            graphics.drawString(font, text, textX, textY, textColor, false);
         }
     }
     

@@ -2,7 +2,7 @@ package dev.eclipseui.api;
 
 import dev.eclipseui.api.component.*;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Consumer;
 
@@ -24,7 +24,7 @@ public interface CategoryBuilder {
     /**
      * Set an optional icon for the category.
      */
-    CategoryBuilder icon(Identifier icon);
+    CategoryBuilder icon(ResourceLocation icon);
     
     /**
      * Set an optional description/tooltip.

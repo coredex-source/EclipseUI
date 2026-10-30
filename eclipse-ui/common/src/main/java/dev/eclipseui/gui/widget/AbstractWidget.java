@@ -2,26 +2,18 @@ package dev.eclipseui.gui.widget;
 
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
-import dev.eclipseui.util.RenderableCompat;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.input.CharacterEvent;
-import net.minecraft.client.input.KeyEvent;
-import net.minecraft.client.input.MouseButtonEvent;
-
-import java.lang.reflect.Method;
 
 /**
  * Base widget class for EclipseUI, inspired by Sodium's widget architecture.
  * Uses Dim2i for positioning instead of separate x/y/width/height fields.
  */
-public abstract class AbstractWidget implements RenderableCompat, GuiEventListener, NarratableEntry {
+public abstract class AbstractWidget implements Renderable, GuiEventListener, NarratableEntry {
 
-    private static final Method KEY_EVENT_SECONDARY_CODE_ACCESSOR =
-            KeyEvent.class.getRecordComponents()[1].getAccessor();
-    
     protected Dim2i dim;
     protected ThemeData theme;
     protected boolean visible = true;
@@ -35,7 +27,7 @@ public abstract class AbstractWidget implements RenderableCompat, GuiEventListen
     }
     
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         if (!this.visible) {
             return;
         }
@@ -48,23 +40,23 @@ public abstract class AbstractWidget implements RenderableCompat, GuiEventListen
      * Render overlay elements that should appear on top of all other widgets.
      * Called after all widgets have been rendered.
      */
-    public void renderOverlay(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+    public void renderOverlay(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         // Override in subclasses that need overlay rendering (dropdowns, popups, etc.)
     }
     
     /**
      * Override this to render the widget content.
      */
-    protected abstract void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta);
+    protected abstract void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta);
     
     @Override
-    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!this.visible || !this.enabled) {
             return false;
         }
         
-        if (this.dim.containsCursor(event.x(), event.y())) {
-            return this.onMouseClicked(event.x(), event.y(), event.button());
+        if (this.dim.containsCursor(mouseX, mouseY)) {
+            return this.onMouseClicked(mouseX, mouseY, button);
         }
         
         return false;
@@ -78,8 +70,8 @@ public abstract class AbstractWidget implements RenderableCompat, GuiEventListen
     }
     
     @Override
-    public boolean mouseReleased(MouseButtonEvent event) {
-        return this.onMouseReleased(event.x(), event.y(), event.button());
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        return this.onMouseReleased(mouseX, mouseY, button);
     }
     
     protected boolean onMouseReleased(double mouseX, double mouseY, int button) {
@@ -87,8 +79,8 @@ public abstract class AbstractWidget implements RenderableCompat, GuiEventListen
     }
     
     @Override
-    public boolean mouseDragged(MouseButtonEvent event, double deltaX, double deltaY) {
-        return this.onMouseDragged(event.x(), event.y(), event.button(), deltaX, deltaY);
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        return this.onMouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
     
     protected boolean onMouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
@@ -101,8 +93,8 @@ public abstract class AbstractWidget implements RenderableCompat, GuiEventListen
     }
     
     @Override
-    public boolean keyPressed(KeyEvent event) {
-        return this.onKeyPressed(event.key(), getSecondaryKeyCode(event), event.modifiers());
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        return this.onKeyPressed(keyCode, scanCode, modifiers);
     }
     
     protected boolean onKeyPressed(int keyCode, int scanCode, int modifiers) {
@@ -110,25 +102,17 @@ public abstract class AbstractWidget implements RenderableCompat, GuiEventListen
     }
     
     @Override
-    public boolean keyReleased(KeyEvent event) {
-        return this.onKeyReleased(event.key(), getSecondaryKeyCode(event), event.modifiers());
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        return this.onKeyReleased(keyCode, scanCode, modifiers);
     }
 
-    private static int getSecondaryKeyCode(KeyEvent event) {
-        try {
-            return (int) KEY_EVENT_SECONDARY_CODE_ACCESSOR.invoke(event);
-        } catch (ReflectiveOperationException exception) {
-            throw new IllegalStateException("Unable to read the secondary key code", exception);
-        }
-    }
-    
     protected boolean onKeyReleased(int keyCode, int scanCode, int modifiers) {
         return false;
     }
     
     @Override
-    public boolean charTyped(CharacterEvent event) {
-        return this.onCharTyped((char) event.codepoint(), 0);
+    public boolean charTyped(char chr, int modifiers) {
+        return this.onCharTyped(chr, modifiers);
     }
     
     protected boolean onCharTyped(char chr, int modifiers) {
@@ -244,14 +228,14 @@ public abstract class AbstractWidget implements RenderableCompat, GuiEventListen
     /**
      * Fill a rectangle with the given color.
      */
-    protected void fillRect(GuiGraphicsExtractor graphics, int x, int y, int width, int height, int color) {
+    protected void fillRect(GuiGraphics graphics, int x, int y, int width, int height, int color) {
         graphics.fill(x, y, x + width, y + height, color);
     }
     
     /**
      * Draw a rectangle outline.
      */
-    protected void drawRect(GuiGraphicsExtractor graphics, int x, int y, int width, int height, int color) {
+    protected void drawRect(GuiGraphics graphics, int x, int y, int width, int height, int color) {
         // Top
         graphics.fill(x, y, x + width, y + 1, color);
         // Bottom
@@ -266,7 +250,7 @@ public abstract class AbstractWidget implements RenderableCompat, GuiEventListen
      * Fill a rounded rectangle with actual rounded corners.
      * Uses a corner-cutting approach for pixel-perfect corners.
      */
-    protected void fillRoundedRect(GuiGraphicsExtractor graphics, int x, int y, int width, int height, int radius, int color) {
+    protected void fillRoundedRect(GuiGraphics graphics, int x, int y, int width, int height, int radius, int color) {
         if (radius <= 0) {
             fillRect(graphics, x, y, width, height, color);
             return;

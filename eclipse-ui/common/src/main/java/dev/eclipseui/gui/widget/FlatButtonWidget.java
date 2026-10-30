@@ -5,11 +5,11 @@ import dev.eclipseui.util.Dim2i;
 import dev.eclipseui.util.GuiGraphicsCompat;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Consumer;
 
@@ -19,9 +19,9 @@ import java.util.function.Consumer;
 public class FlatButtonWidget extends AbstractWidget {
     
     // Vanilla button sprite locations
-    private static final Identifier BUTTON_SPRITE = Identifier.withDefaultNamespace("widget/button");
-    private static final Identifier BUTTON_DISABLED_SPRITE = Identifier.withDefaultNamespace("widget/button_disabled");
-    private static final Identifier BUTTON_HIGHLIGHTED_SPRITE = Identifier.withDefaultNamespace("widget/button_highlighted");
+    private static final ResourceLocation BUTTON_SPRITE = ResourceLocation.withDefaultNamespace("widget/button");
+    private static final ResourceLocation BUTTON_DISABLED_SPRITE = ResourceLocation.withDefaultNamespace("widget/button_disabled");
+    private static final ResourceLocation BUTTON_HIGHLIGHTED_SPRITE = ResourceLocation.withDefaultNamespace("widget/button_highlighted");
     
     private Component text;
     private Consumer<FlatButtonWidget> onClick;
@@ -45,7 +45,7 @@ public class FlatButtonWidget extends AbstractWidget {
     }
     
     @Override
-    protected void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         if (this.theme.useVanillaWidgets()) {
             renderVanillaButton(graphics, mouseX, mouseY);
         } else {
@@ -53,11 +53,11 @@ public class FlatButtonWidget extends AbstractWidget {
         }
     }
     
-    private void renderVanillaButton(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+    private void renderVanillaButton(GuiGraphics graphics, int mouseX, int mouseY) {
         var font = Minecraft.getInstance().font;
         
         // Select sprite based on state
-        Identifier sprite;
+        ResourceLocation sprite;
         int textColor;
         if (!this.enabled) {
             sprite = BUTTON_DISABLED_SPRITE;
@@ -77,10 +77,10 @@ public class FlatButtonWidget extends AbstractWidget {
         int textWidth = font.width(this.text);
         int textX = dim.getCenterX() - (textWidth / 2);
         int textY = dim.getCenterY() - (font.lineHeight / 2);
-        graphics.text(font, this.text, textX, textY, textColor, true);
+        graphics.drawString(font, this.text, textX, textY, textColor, true);
     }
     
-    private void renderFlatButton(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+    private void renderFlatButton(GuiGraphics graphics, int mouseX, int mouseY) {
         int bgColor;
         int textColor;
         
@@ -110,7 +110,7 @@ public class FlatButtonWidget extends AbstractWidget {
         int textWidth = font.width(this.text);
         int textX = dim.getCenterX() - (textWidth / 2);
         int textY = dim.getCenterY() - (font.lineHeight / 2);
-        graphics.text(font, this.text, textX, textY, textColor, false);
+        graphics.drawString(font, this.text, textX, textY, textColor, false);
     }
     
     @Override

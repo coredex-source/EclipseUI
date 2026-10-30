@@ -5,7 +5,7 @@ import dev.eclipseui.util.Dim2i;
 import dev.eclipseui.util.GuiGraphicsCompat;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -170,7 +170,7 @@ public class SliderWidget extends OptionWidget {
     }
     
     @Override
-    protected void renderControl(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+    protected void renderControl(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         Dim2i controlDim = getControlDim();
         var font = Minecraft.getInstance().font;
         
@@ -182,9 +182,9 @@ public class SliderWidget extends OptionWidget {
             int sliderY = controlDim.getCenterY() - (sliderHeight / 2);
             
             // Draw vanilla button background using sprite
-            net.minecraft.resources.Identifier sprite = this.enabled 
-                ? net.minecraft.resources.Identifier.withDefaultNamespace("widget/button")
-                : net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_disabled");
+            net.minecraft.resources.ResourceLocation sprite = this.enabled
+                ? net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button")
+                : net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button_disabled");
             GuiGraphicsCompat.blitSprite(graphics, sprite, sliderX, sliderY, sliderWidth, sliderHeight);
             
             // Draw slider handle
@@ -193,7 +193,7 @@ public class SliderWidget extends OptionWidget {
             int handleX = sliderX + 4 + (int) ((sliderWidth - 8 - handleWidth) * progress);
             
             // Draw highlighted section under handle using a lighter button sprite
-            net.minecraft.resources.Identifier handleSprite = net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_highlighted");
+            net.minecraft.resources.ResourceLocation handleSprite = net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button_highlighted");
             GuiGraphicsCompat.blitSprite(graphics, handleSprite, handleX, sliderY, handleWidth, sliderHeight);
             
             // Draw value text centered with shadow
@@ -202,7 +202,7 @@ public class SliderWidget extends OptionWidget {
             int textX = sliderX + (sliderWidth - textWidth) / 2;
             int textY = sliderY + (sliderHeight - font.lineHeight) / 2;
             int textColor = this.enabled ? 0xFFFFFFFF : 0xFF707070;
-            graphics.text(font, text, textX, textY, textColor, true);
+            graphics.drawString(font, text, textX, textY, textColor, true);
         } else {
             // Modern flat slider style
             int sliderHeight = 8;
@@ -241,7 +241,7 @@ public class SliderWidget extends OptionWidget {
                 int textX = sliderX + sliderWidth + 8;
                 int textY = controlDim.getCenterY() - (font.lineHeight / 2);
                 int textColor = this.enabled ? theme.textSecondary() : theme.textDisabled();
-                graphics.text(font, text, textX, textY, textColor, false);
+                graphics.drawString(font, text, textX, textY, textColor, false);
             }
         }
     }

@@ -5,9 +5,9 @@ import dev.eclipseui.util.Dim2i;
 import dev.eclipseui.util.GuiGraphicsCompat;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class CategoryListWidget extends AbstractWidget {
         super(dim, theme);
     }
     
-    public void addCategory(Component name, @Nullable Identifier icon, @Nullable Component description) {
+    public void addCategory(Component name, @Nullable ResourceLocation icon, @Nullable Component description) {
         categories.add(new CategoryEntry(name, icon, description));
     }
     
@@ -58,7 +58,7 @@ public class CategoryListWidget extends AbstractWidget {
     }
     
     @Override
-    protected void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         // Draw background
         if (theme.useVanillaWidgets()) {
             // Vanilla style - dark transparent background
@@ -81,10 +81,10 @@ public class CategoryListWidget extends AbstractWidget {
             if (theme.useVanillaWidgets()) {
                 // Vanilla style - use button sprites for selected/hovered
                 if (isSelected) {
-                    net.minecraft.resources.Identifier sprite = net.minecraft.resources.Identifier.withDefaultNamespace("widget/button");
+                    net.minecraft.resources.ResourceLocation sprite = net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button");
                     GuiGraphicsCompat.blitSprite(graphics, sprite, dim.x() + 2, itemY + 1, dim.width() - 4, ITEM_HEIGHT - 2);
                 } else if (isHovered) {
-                    net.minecraft.resources.Identifier sprite = net.minecraft.resources.Identifier.withDefaultNamespace("widget/button_highlighted");
+                    net.minecraft.resources.ResourceLocation sprite = net.minecraft.resources.ResourceLocation.withDefaultNamespace("widget/button_highlighted");
                     GuiGraphicsCompat.blitSprite(graphics, sprite, dim.x() + 2, itemY + 1, dim.width() - 4, ITEM_HEIGHT - 2);
                 }
                 
@@ -92,7 +92,7 @@ public class CategoryListWidget extends AbstractWidget {
                 int textX = dim.x() + (dim.width() - font.width(category.name)) / 2;
                 int textY = itemY + (ITEM_HEIGHT - font.lineHeight) / 2;
                 int textColor = isSelected ? 0xFFFFFFFF : (isHovered ? 0xFFFFFFA0 : 0xFFE0E0E0);
-                graphics.text(font, category.name, textX, textY, textColor, true);
+                graphics.drawString(font, category.name, textX, textY, textColor, true);
             } else {
                 // Modern flat style
                 // Background
@@ -120,7 +120,7 @@ public class CategoryListWidget extends AbstractWidget {
                 int textX = iconX + (category.icon != null ? ICON_SIZE + PADDING : 0);
                 int textY = itemY + (ITEM_HEIGHT - font.lineHeight) / 2;
                 int textColor = isSelected ? theme.textPrimary() : theme.textSecondary();
-                graphics.text(font, category.name, textX, textY, textColor, false);
+                graphics.drawString(font, category.name, textX, textY, textColor, false);
             }
         }
         
@@ -162,7 +162,7 @@ public class CategoryListWidget extends AbstractWidget {
     
     public record CategoryEntry(
         Component name,
-        @Nullable Identifier icon,
+        @Nullable ResourceLocation icon,
         @Nullable Component description
     ) {}
 }

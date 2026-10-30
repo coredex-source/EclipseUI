@@ -4,13 +4,14 @@ import dev.eclipseplatform.EclipsePlatform;
 import dev.eclipseui.EclipseUI;
 import dev.eclipseui.example.ExampleConfigScreens;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 /**
- * NeoForge entry point for the aggregate EclipseUI mod.
+ * NeoForge entry point for the EclipseUI mod.
  */
-@Mod(EclipseUI.MOD_ID)
+@Mod(value = EclipseUI.MOD_ID, dist = Dist.CLIENT)
 public final class EclipseUINeoForge {
 
     public EclipseUINeoForge(ModContainer container) {

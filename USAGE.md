@@ -1,6 +1,6 @@
 # Using EclipseUI in Your Mod
 
-This guide explains how to integrate EclipseUI into your Fabric mod.
+This guide covers EclipseUI for Minecraft 1.21.1 on Fabric and NeoForge. Both require Java 21. The Java examples use official Mojang mappings; Fabric projects using Yarn should adapt the Minecraft class names to their mappings.
 
 ## Table of Contents
 - [Adding the Dependency](#adding-the-dependency)
@@ -10,7 +10,7 @@ This guide explains how to integrate EclipseUI into your Fabric mod.
 
 ## Adding the Dependency
 
-EclipseUI is distributed as a Fabric aggregate JAR with its modules nested under `META-INF/jars`, following the same packaging style used by Fabric API.
+EclipseUI is distributed as one library JAR per loader. Each JAR contains the UI, core utilities, and platform support. Choose the 1.21.1 release for your loader.
 
 #### Step 1: Add the repository
 
@@ -26,15 +26,30 @@ repositories {
 
 ```groovy
 dependencies {
-    // EclipseUI - Complete Fabric UI library
-    implementation "maven.modrinth:eclipseui:${project.eclipseUiVersion}"
-    
-    // Include in your mod JAR (bundles the library with your mod)
+    // Fabric, using Loom
+    modImplementation "maven.modrinth:eclipseui:${project.eclipseUiVersion}"
+
+    // Optional: bundle the library with your Fabric mod
     include "maven.modrinth:eclipseui:${project.eclipseUiVersion}"
 }
 ```
 
-Set `eclipseUiVersion=1.0.5+mc26.2-rc-2` in `gradle.properties`, or replace it with the EclipseUI version you want to use.
+For NeoForge with ModDevGradle, use:
+
+```groovy
+dependencies {
+    implementation "maven.modrinth:eclipseui:${project.eclipseUiVersion}"
+}
+```
+
+Set `eclipseUiVersion` in `gradle.properties` to the exact Modrinth version ID or version number for the chosen 1.21.1 loader release. Local builds use the mod versions `1.0.5+mc1.21.1-fabric` and `1.0.5+mc1.21.1-neoforge`; publishing a release to Modrinth is a separate step. For local Maven development, run `./gradlew publishToMavenLocal`, add `mavenLocal()` to your repositories, and use:
+
+```groovy
+// Fabric
+modImplementation "com.github.coredex-source:EclipseUI-fabric:1.0.5+mc1.21.1-fabric"
+// NeoForge
+implementation "com.github.coredex-source:EclipseUI-neoforge:1.0.5+mc1.21.1-neoforge"
+```
 
 ### Manual Installation
 
@@ -42,7 +57,8 @@ You can also download the JAR directly from [GitHub Releases](https://github.com
 
 | Loader | File |
 |--------|------|
-| Fabric | `EclipseUI-fabric-{version}.jar` |
+| Fabric | `EclipseUI-fabric-1.0.5-fabric-1.21.1.jar` |
+| NeoForge | `EclipseUI-neoforge-1.0.5-neoforge-1.21.1.jar` |
 
 ## Basic Usage
 
@@ -114,6 +130,25 @@ Don't forget to register it in your `fabric.mod.json`:
       "com.example.mymod.MyModMenuIntegration"
     ]
   }
+}
+```
+
+### Config Screen Registration (NeoForge)
+
+Register your config screen from your client mod entry point:
+
+```java
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+
+@Mod(value = "mymod", dist = Dist.CLIENT)
+public class MyModClient {
+    public MyModClient(ModContainer container) {
+        container.registerExtensionPoint(IConfigScreenFactory.class,
+            (modContainer, parent) -> MyModConfig.createConfigScreen(parent));
+    }
 }
 ```
 
@@ -366,16 +401,22 @@ Select a theme when building your config screen:
 
 ## Building from Source
 
-Clone the repository and build the Fabric aggregate JAR:
+Clone the legacy branch and build both loader JARs using JDK 25 for Gradle. The library is compiled for Java 21, and Gradle resolves that toolchain automatically:
 
 ```bash
-git clone https://github.com/coredex-source/EclipseUI.git
+git clone --branch legacy-1.21.1 https://github.com/coredex-source/EclipseUI.git
 cd EclipseUI
 ./gradlew buildAll
 ```
 
-The aggregate JAR will be output to the `bin/` directory:
-- `bin/EclipseUI-fabric-{version}.jar`
+The library and source JARs are output to `bin/`:
+
+- `bin/EclipseUI-fabric-1.0.5-fabric-1.21.1.jar`
+- `bin/EclipseUI-neoforge-1.0.5-neoforge-1.21.1.jar`
+
+Build one loader with `:1.21.1-fabric:buildAll` or `:1.21.1-neoforge:buildAll`.
+
+The standalone test mods consume these local JARs. After building the library, run `cd testmod` and `./gradlew build`, then `./gradlew :fabric:runClient` or `./gradlew :neoforge:runClient`. Both expose the same sample configuration through their loader's mod list. If you change `mod_version`, update `testmod/gradle.properties` to match.
 
 ## Tips
 

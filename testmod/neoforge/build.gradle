@@ -1,0 +1,35 @@
+plugins {
+    id 'net.neoforged.moddev' version "$moddevgradle_version"
+}
+
+neoForge {
+    version = property('neoforge_version')
+
+    runs {
+        client {
+            client()
+        }
+    }
+
+    mods {
+        eclipseui_testmod {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+dependencies {
+    implementation files(rootProject.file("../bin/EclipseUI-neoforge-${property('eclipseUiVersion')}-neoforge-${property('minecraft_version')}.jar"))
+}
+
+tasks.named('processResources') {
+    def replacements = [version: project.version.toString(), neoforge_version: project.property('neoforge_version').toString()]
+    inputs.properties replacements
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand replacements
+    }
+}
+
+base {
+    archivesName = 'EclipseUI-TestMod-neoforge'
+}

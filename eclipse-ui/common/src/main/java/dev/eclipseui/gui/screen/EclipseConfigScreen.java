@@ -7,14 +7,10 @@ import dev.eclipseui.gui.theme.ThemeRegistry;
 import dev.eclipseui.gui.widget.*;
 import dev.eclipseui.util.Dim2i;
 import dev.eclipseui.util.MinecraftScreenCompat;
-import dev.eclipseui.util.ScreenCompat;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.input.CharacterEvent;
-import net.minecraft.client.input.KeyEvent;
-import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +20,7 @@ import java.util.List;
 /**
  * Main configuration screen for EclipseUI.
  */
-public class EclipseConfigScreen extends ScreenCompat {
+public class EclipseConfigScreen extends Screen {
     
     private final @Nullable Screen parent;
     private final ThemeData theme;
@@ -221,8 +217,9 @@ public class EclipseConfigScreen extends ScreenCompat {
     }
     
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
-        
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        this.renderBackground(graphics, mouseX, mouseY, delta);
+
         // Draw semi-transparent overlay on top of blur
         if (theme.useVanillaWidgets()) {
             // Vanilla style - lighter overlay to let blur show through
@@ -245,16 +242,16 @@ public class EclipseConfigScreen extends ScreenCompat {
         }
         
         // Render widgets
-        categoryList.extractRenderState(graphics, mouseX, mouseY, delta);
+        categoryList.render(graphics, mouseX, mouseY, delta);
         optionList.renderWithoutOverlays(graphics, mouseX, mouseY, delta);
         
         if (saveButton != null) {
-            saveButton.extractRenderState(graphics, mouseX, mouseY, delta);
+            saveButton.render(graphics, mouseX, mouseY, delta);
         }
         if (resetButton != null) {
-            resetButton.extractRenderState(graphics, mouseX, mouseY, delta);
+            resetButton.render(graphics, mouseX, mouseY, delta);
         }
-        doneButton.extractRenderState(graphics, mouseX, mouseY, delta);
+        doneButton.render(graphics, mouseX, mouseY, delta);
         
         // Render overlays
         optionList.renderOverlays(graphics, mouseX, mouseY, delta);
@@ -263,7 +260,7 @@ public class EclipseConfigScreen extends ScreenCompat {
         renderOptionTooltip(graphics, mouseX, mouseY);
     }
     
-    private void renderHeader(GuiGraphicsExtractor graphics) {
+    private void renderHeader(GuiGraphics graphics) {
         if (theme.useVanillaWidgets()) {
             // Semi-transparent dark overlay for header
             graphics.fill(0, 0, this.width, HEADER_HEIGHT, 0x80000000);
@@ -274,10 +271,10 @@ public class EclipseConfigScreen extends ScreenCompat {
         }
         
         // Title
-        graphics.centeredText(this.font, this.title, this.width / 2, (HEADER_HEIGHT - this.font.lineHeight) / 2, theme.textPrimary());
+        graphics.drawCenteredString(this.font, this.title, this.width / 2, (HEADER_HEIGHT - this.font.lineHeight) / 2, theme.textPrimary());
     }
     
-    private void renderOptionTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+    private void renderOptionTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
         // Overlay widgets (dropdowns/color pickers) should render unobstructed.
         if (optionList.hasExpandedOverlay()) {
             return;
@@ -306,7 +303,7 @@ public class EclipseConfigScreen extends ScreenCompat {
                 
                 // Text
                 for (int i = 0; i < lines.size(); i++) {
-                    graphics.text(this.font, lines.get(i), x, y + i * (this.font.lineHeight + 2), 0xFFFFFFFF);
+                    graphics.drawString(this.font, lines.get(i), x, y + i * (this.font.lineHeight + 2), 0xFFFFFFFF);
                 }
                 break;
             }
@@ -314,25 +311,25 @@ public class EclipseConfigScreen extends ScreenCompat {
     }
     
     @Override
-    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-        if (categoryList.mouseClicked(event, doubleClick)) return true;
-        if (optionList.mouseClicked(event, doubleClick)) return true;
-        if (saveButton != null && saveButton.mouseClicked(event, doubleClick)) return true;
-        if (resetButton != null && resetButton.mouseClicked(event, doubleClick)) return true;
-        if (doneButton.mouseClicked(event, doubleClick)) return true;
-        return super.mouseClicked(event, doubleClick);
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (categoryList.mouseClicked(mouseX, mouseY, button)) return true;
+        if (optionList.mouseClicked(mouseX, mouseY, button)) return true;
+        if (saveButton != null && saveButton.mouseClicked(mouseX, mouseY, button)) return true;
+        if (resetButton != null && resetButton.mouseClicked(mouseX, mouseY, button)) return true;
+        if (doneButton.mouseClicked(mouseX, mouseY, button)) return true;
+        return super.mouseClicked(mouseX, mouseY, button);
     }
     
     @Override
-    public boolean mouseReleased(MouseButtonEvent event) {
-        optionList.mouseReleased(event);
-        return super.mouseReleased(event);
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        optionList.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(mouseX, mouseY, button);
     }
     
     @Override
-    public boolean mouseDragged(MouseButtonEvent event, double deltaX, double deltaY) {
-        if (optionList.mouseDragged(event, deltaX, deltaY)) return true;
-        return super.mouseDragged(event, deltaX, deltaY);
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        if (optionList.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)) return true;
+        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
     
     @Override
@@ -342,16 +339,16 @@ public class EclipseConfigScreen extends ScreenCompat {
     }
     
     @Override
-    public boolean keyPressed(KeyEvent event) {
-        if (optionList.keyPressed(event)) return true;
-        if (categoryList.keyPressed(event)) return true;
-        return super.keyPressed(event);
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (optionList.keyPressed(keyCode, scanCode, modifiers)) return true;
+        if (categoryList.keyPressed(keyCode, scanCode, modifiers)) return true;
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
     
     @Override
-    public boolean charTyped(CharacterEvent event) {
-        if (optionList.charTyped(event)) return true;
-        return super.charTyped(event);
+    public boolean charTyped(char chr, int modifiers) {
+        if (optionList.charTyped(chr, modifiers)) return true;
+        return super.charTyped(chr, modifiers);
     }
     
     /**
@@ -359,7 +356,7 @@ public class EclipseConfigScreen extends ScreenCompat {
      */
     public record CategoryData(
         Component name,
-        @Nullable net.minecraft.resources.Identifier icon,
+        @Nullable net.minecraft.resources.ResourceLocation icon,
         @Nullable Component description,
         List<OptionWidget> options
     ) {
@@ -367,7 +364,7 @@ public class EclipseConfigScreen extends ScreenCompat {
             this(name, null, null, new ArrayList<>());
         }
         
-        public CategoryData(Component name, @Nullable net.minecraft.resources.Identifier icon) {
+        public CategoryData(Component name, @Nullable net.minecraft.resources.ResourceLocation icon) {
             this(name, icon, null, new ArrayList<>());
         }
     }

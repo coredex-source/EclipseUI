@@ -24,4 +24,6 @@ subprojects {
 
     group = property('mod_group').toString()
     version = property('mod_version').toString()
+
+    sourceSets.main.java.srcDir rootProject.file('common/src/main/java')
 }

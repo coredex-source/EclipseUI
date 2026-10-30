@@ -3,20 +3,16 @@ package dev.eclipseui.gui.screen;
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.gui.theme.Colors;
 import dev.eclipseui.util.MinecraftScreenCompat;
-import dev.eclipseui.util.ScreenCompat;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.input.CharacterEvent;
-import net.minecraft.client.input.KeyEvent;
-import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class ColorPickerEditScreen extends ScreenCompat {
+public class ColorPickerEditScreen extends Screen {
 
     private enum FocusedInput {
         NONE,
@@ -97,7 +93,8 @@ public class ColorPickerEditScreen extends ScreenCompat {
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        this.renderBackground(graphics, mouseX, mouseY, delta);
 
         float progress = Math.clamp((openTicks + delta) / 10f, 0f, 1f);
         float eased = 1f - (1f - progress) * (1f - progress);
@@ -109,7 +106,7 @@ public class ColorPickerEditScreen extends ScreenCompat {
         renderPanel(graphics, mouseX, mouseY, layout);
     }
 
-    private void renderPanel(GuiGraphicsExtractor graphics, int mouseX, int mouseY, PanelLayout layout) {
+    private void renderPanel(GuiGraphics graphics, int mouseX, int mouseY, PanelLayout layout) {
         int x = layout.panelX;
         int y = layout.panelY;
         int width = layout.panelWidth;
@@ -125,8 +122,8 @@ public class ColorPickerEditScreen extends ScreenCompat {
 
         var font = Minecraft.getInstance().font;
         int titleColor = theme.useVanillaWidgets() ? 0xFFFFFFFF : theme.textPrimary();
-        graphics.text(font, this.title, x + 10, y + 8, titleColor, theme.useVanillaWidgets());
-        graphics.text(font, optionName, x + 10, y + 20, theme.useVanillaWidgets() ? 0xFFB0B0B0 : theme.textSecondary(), theme.useVanillaWidgets());
+        graphics.drawString(font, this.title, x + 10, y + 8, titleColor, theme.useVanillaWidgets());
+        graphics.drawString(font, optionName, x + 10, y + 20, theme.useVanillaWidgets() ? 0xFFB0B0B0 : theme.textSecondary(), theme.useVanillaWidgets());
 
         renderSVArea(graphics, layout.svX, layout.svY, layout.svSize);
         renderHueSlider(graphics, layout.hueX, layout.svY, layout.hueWidth, layout.svSize);
@@ -164,7 +161,7 @@ public class ColorPickerEditScreen extends ScreenCompat {
         renderButtons(graphics, layout, mouseX, mouseY);
     }
 
-    private void renderSVArea(GuiGraphicsExtractor graphics, int x, int y, int size) {
+    private void renderSVArea(GuiGraphics graphics, int x, int y, int size) {
         int[] baseRgb = hsvToRgb(hue, 1f, 1f);
         int baseColor = Colors.rgb(baseRgb[0], baseRgb[1], baseRgb[2]);
         graphics.fill(x, y, x + size, y + size, baseColor);
@@ -188,7 +185,7 @@ public class ColorPickerEditScreen extends ScreenCompat {
         drawRect(graphics, cursorX, cursorY, 5, 5, 0xFFFFFFFF);
     }
 
-    private void renderHueSlider(GuiGraphicsExtractor graphics, int x, int y, int width, int height) {
+    private void renderHueSlider(GuiGraphics graphics, int x, int y, int width, int height) {
         for (int iy = 0; iy < height; iy++) {
             float h = (iy / (float) height) * 360f;
             int[] rgb = hsvToRgb(h, 1f, 1f);
@@ -200,7 +197,7 @@ public class ColorPickerEditScreen extends ScreenCompat {
         graphics.fill(x - 2, markerY, x + width + 2, markerY + 3, 0xFFFFFFFF);
     }
 
-    private void renderAlphaSlider(GuiGraphicsExtractor graphics, int x, int y, int width, int height) {
+    private void renderAlphaSlider(GuiGraphics graphics, int x, int y, int width, int height) {
         int rgbOnly = currentColor & 0x00FFFFFF;
         for (int iy = 0; iy < height; iy++) {
             int alpha = 255 - (iy * 255 / height);
@@ -215,7 +212,7 @@ public class ColorPickerEditScreen extends ScreenCompat {
     }
 
     private void renderInputField(
-        GuiGraphicsExtractor graphics,
+        GuiGraphics graphics,
         int x,
         int y,
         int width,
@@ -225,7 +222,7 @@ public class ColorPickerEditScreen extends ScreenCompat {
         boolean focused
     ) {
         var font = Minecraft.getInstance().font;
-        graphics.text(font, label, x, y - 9, theme.useVanillaWidgets() ? 0xFFB0B0B0 : theme.textSecondary(), theme.useVanillaWidgets());
+        graphics.drawString(font, label, x, y - 9, theme.useVanillaWidgets() ? 0xFFB0B0B0 : theme.textSecondary(), theme.useVanillaWidgets());
 
         fillRect(graphics, x, y, width, height, theme.inputBackground());
         drawRect(graphics, x, y, width, height, focused ? theme.inputBorderFocused() : theme.inputBorder());
@@ -235,7 +232,7 @@ public class ColorPickerEditScreen extends ScreenCompat {
         while (!shown.isEmpty() && font.width(shown) > maxPixel) {
             shown = shown.substring(1);
         }
-        graphics.text(font, shown, x + 4, y + 5, theme.textPrimary(), theme.useVanillaWidgets());
+        graphics.drawString(font, shown, x + 4, y + 5, theme.textPrimary(), theme.useVanillaWidgets());
 
         if (focused && cursorBlinkTicks / 6 % 2 == 0) {
             String before = value.substring(0, Math.min(cursorPosition, value.length()));
@@ -244,7 +241,7 @@ public class ColorPickerEditScreen extends ScreenCompat {
         }
     }
 
-    private void renderPresets(GuiGraphicsExtractor graphics, int x, int y, int width) {
+    private void renderPresets(GuiGraphics graphics, int x, int y, int width) {
         if (presets == null || presets.length == 0) {
             return;
         }
@@ -261,7 +258,7 @@ public class ColorPickerEditScreen extends ScreenCompat {
         }
     }
 
-    private void renderButtons(GuiGraphicsExtractor graphics, PanelLayout layout, int mouseX, int mouseY) {
+    private void renderButtons(GuiGraphics graphics, PanelLayout layout, int mouseX, int mouseY) {
         var font = Minecraft.getInstance().font;
         renderButton(graphics, layout.resetX, layout.buttonY, layout.buttonWidth, 16, Component.translatable("eclipseui.button.reset"), mouseX, mouseY);
         renderButton(graphics, layout.cancelX, layout.buttonY, layout.buttonWidth, 16, Component.translatable("eclipseui.confirm.no"), mouseX, mouseY);
@@ -269,10 +266,10 @@ public class ColorPickerEditScreen extends ScreenCompat {
 
         String summary = showHexInput ? hexInput : argbInput;
         int summaryColor = theme.useVanillaWidgets() ? 0xFFE0E0E0 : theme.textSecondary();
-        graphics.text(font, Component.literal(summary), layout.panelX + 10, layout.buttonY + 4, summaryColor, theme.useVanillaWidgets());
+        graphics.drawString(font, Component.literal(summary), layout.panelX + 10, layout.buttonY + 4, summaryColor, theme.useVanillaWidgets());
     }
 
-    private void renderButton(GuiGraphicsExtractor graphics, int x, int y, int width, int height, Component text, int mouseX, int mouseY) {
+    private void renderButton(GuiGraphics graphics, int x, int y, int width, int height, Component text, int mouseX, int mouseY) {
         boolean hovered = mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height;
         int bg = hovered ? theme.buttonBackgroundHover() : theme.buttonBackground();
         fillRect(graphics, x, y, width, height, bg);
@@ -281,21 +278,18 @@ public class ColorPickerEditScreen extends ScreenCompat {
         var font = Minecraft.getInstance().font;
         int textX = x + (width - font.width(text)) / 2;
         int textY = y + (height - font.lineHeight) / 2;
-        graphics.text(font, text, textX, textY, theme.textPrimary(), theme.useVanillaWidgets());
+        graphics.drawString(font, text, textX, textY, theme.textPrimary(), theme.useVanillaWidgets());
     }
 
     @Override
-    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-        if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) {
-            return super.mouseClicked(event, doubleClick);
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (button != InputConstants.MOUSE_BUTTON_LEFT) {
+            return super.mouseClicked(mouseX, mouseY, button);
         }
 
         PanelLayout layout = computeLayout(1f);
         int panelLimitX = layout.panelX + layout.panelWidth;
         int panelLimitY = layout.panelY + layout.panelHeight;
-
-        double mouseX = event.x();
-        double mouseY = event.y();
 
         if (mouseX < layout.panelX || mouseX >= panelLimitX || mouseY < layout.panelY || mouseY >= panelLimitY) {
             applyAndClose();
@@ -358,36 +352,35 @@ public class ColorPickerEditScreen extends ScreenCompat {
     }
 
     @Override
-    public boolean mouseReleased(MouseButtonEvent event) {
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
         draggingSV = false;
         draggingHue = false;
         draggingAlpha = false;
-        return super.mouseReleased(event);
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
-    public boolean mouseDragged(MouseButtonEvent event, double deltaX, double deltaY) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         PanelLayout layout = computeLayout(1f);
 
         if (draggingSV) {
-            updateSV(event.x(), event.y(), layout.svX, layout.svY, layout.svSize);
+            updateSV(mouseX, mouseY, layout.svX, layout.svY, layout.svSize);
             return true;
         }
         if (draggingHue) {
-            updateHue(event.y(), layout.svY, layout.svSize);
+            updateHue(mouseY, layout.svY, layout.svSize);
             return true;
         }
         if (draggingAlpha) {
-            updateAlpha(event.y(), layout.svY, layout.svSize);
+            updateAlpha(mouseY, layout.svY, layout.svSize);
             return true;
         }
 
-        return super.mouseDragged(event, deltaX, deltaY);
+        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
     @Override
-    public boolean keyPressed(KeyEvent event) {
-        int keyCode = event.key();
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 
         if (focusedInput != FocusedInput.NONE) {
             if (handleInputKey(keyCode)) {
@@ -415,16 +408,15 @@ public class ColorPickerEditScreen extends ScreenCompat {
             return true;
         }
 
-        return super.keyPressed(event);
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
-    public boolean charTyped(CharacterEvent event) {
+    public boolean charTyped(char chr, int modifiers) {
         if (focusedInput == FocusedInput.NONE) {
-            return super.charTyped(event);
+            return super.charTyped(chr, modifiers);
         }
 
-        char chr = (char) event.codepoint();
         if (focusedInput == FocusedInput.ARGB) {
             if ((chr >= '0' && chr <= '9') || chr == ',' || chr == ' ' || chr == '-') {
                 insertChar(chr, true);
@@ -441,7 +433,7 @@ public class ColorPickerEditScreen extends ScreenCompat {
             return false;
         }
 
-        return super.charTyped(event);
+        return super.charTyped(chr, modifiers);
     }
 
     @Override
@@ -919,11 +911,11 @@ public class ColorPickerEditScreen extends ScreenCompat {
         return new int[] {(int) (r * 255f), (int) (g * 255f), (int) (b * 255f)};
     }
 
-    private static void fillRect(GuiGraphicsExtractor graphics, int x, int y, int width, int height, int color) {
+    private static void fillRect(GuiGraphics graphics, int x, int y, int width, int height, int color) {
         graphics.fill(x, y, x + width, y + height, color);
     }
 
-    private static void drawRect(GuiGraphicsExtractor graphics, int x, int y, int width, int height, int color) {
+    private static void drawRect(GuiGraphics graphics, int x, int y, int width, int height, int color) {
         graphics.fill(x, y, x + width, y + 1, color);
         graphics.fill(x, y + height - 1, x + width, y + height, color);
         graphics.fill(x, y, x + 1, y + height, color);

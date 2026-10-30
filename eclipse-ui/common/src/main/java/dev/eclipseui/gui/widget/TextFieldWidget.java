@@ -4,7 +4,7 @@ import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -117,7 +117,7 @@ public class TextFieldWidget extends OptionWidget {
     }
     
     @Override
-    protected void renderControl(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+    protected void renderControl(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         Dim2i controlDim = getControlDim();
         var font = Minecraft.getInstance().font;
         
@@ -163,7 +163,7 @@ public class TextFieldWidget extends OptionWidget {
         // Draw text or placeholder
         if (this.currentText.isEmpty() && this.placeholder != null && !this.textFocused) {
             int placeholderColor = theme.useVanillaWidgets() ? 0xFF707070 : theme.textDisabled();
-            graphics.text(font, this.placeholder, textX, textY, placeholderColor, theme.useVanillaWidgets());
+            graphics.drawString(font, this.placeholder, textX, textY, placeholderColor, theme.useVanillaWidgets());
         } else {
             String displayText = this.currentText;
             
@@ -182,7 +182,7 @@ public class TextFieldWidget extends OptionWidget {
             } else {
                 textColor = this.enabled ? theme.textPrimary() : theme.textDisabled();
             }
-            graphics.text(font, displayText, textX, textY, textColor, theme.useVanillaWidgets());
+            graphics.drawString(font, displayText, textX, textY, textColor, theme.useVanillaWidgets());
             
             // Draw cursor
             if (this.textFocused && this.cursorBlinkTicks / 6 % 2 == 0) {

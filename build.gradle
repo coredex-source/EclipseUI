@@ -1,5 +1,5 @@
 plugins {
-    id 'net.fabricmc.fabric-loom' apply false
+    id 'net.fabricmc.fabric-loom-remap' apply false
     id 'dev.isxander.modstitch.base'
     id 'maven-publish'
 }
@@ -90,9 +90,6 @@ sourceSets {
         java.srcDir rootDir.dir('eclipse-platform/common/src/main/java')
         java.srcDir rootDir.dir('eclipse-ui/common/src/main/java')
 
-        def compatVersion = stonecutter.eval(stonecutter.current.version, '>=26.4') ? '26.4' : '26.1'
-        java.srcDir rootDir.dir("eclipse-ui/compat/${compatVersion}/src/main/java")
-
         resources.srcDir rootDir.dir('src/main/resources')
         resources.srcDir rootDir.dir('src/main/templates')
         resources.srcDir rootDir.dir('eclipse-ui/common/src/main/resources')
@@ -157,22 +154,21 @@ tasks.named('processResources') {
 tasks.withType(AbstractArchiveTask).configureEach {
     preserveFileTimestamps = false
     reproducibleFileOrder = true
-}
-
-tasks.withType(Jar).configureEach {
     archiveBaseName = "${cfg.modName}-${activeLoader}"
     archiveVersion = "${cfg.modVersion}-${activeLoader}-${cfg.minecraftVersion}"
 }
 
+def finalSourcesJarTask = tasks.named(activeLoader == 'fabric' ? 'remapSourcesJar' : 'sourcesJar')
+
 tasks.register('copyToBin', Copy) {
     group = 'build'
-    description = "Copies the ${activeLoader} aggregate JARs to the bin folder"
+    description = "Copies the ${activeLoader} library JARs to the bin folder"
 
     dependsOn modstitch.finalJarTask
-    dependsOn tasks.named('sourcesJar')
+    dependsOn finalSourcesJarTask
 
     from modstitch.finalJarTask
-    from tasks.named('sourcesJar')
+    from finalSourcesJarTask
 
     into binDir
 }
@@ -189,7 +185,7 @@ tasks.named('clean') {
 
 tasks.register('buildAll') {
     group = 'build'
-    description = "Builds the active ${activeLoader} aggregate JAR and copies it to the bin folder"
+    description = "Builds the active ${activeLoader} library JAR and copies it to the bin folder"
     dependsOn 'build', 'copyToBin'
 }
 
@@ -201,7 +197,7 @@ publishing {
             version = activeVersionString
 
             artifact modstitch.finalJarTask
-            artifact tasks.named('sourcesJar')
+            artifact finalSourcesJarTask
 
             pom {
                 name = "EclipseUI ${activeLoader.capitalize()}"

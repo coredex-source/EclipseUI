@@ -2,7 +2,7 @@ package dev.eclipseui.gui.widget;
 
 import dev.eclipseui.api.ThemeData;
 import dev.eclipseui.util.Dim2i;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public class OptionListWidget extends AbstractWidget {
     }
     
     @Override
-    protected void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         renderWithoutOverlays(graphics, mouseX, mouseY, delta);
         renderOverlays(graphics, mouseX, mouseY, delta);
     }
@@ -78,7 +78,7 @@ public class OptionListWidget extends AbstractWidget {
      * Renders the widget without overlays (dropdowns, popups).
      * Use this when you need to render overlays separately on top of other elements.
      */
-    public void renderWithoutOverlays(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+    public void renderWithoutOverlays(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         // Smooth scrolling
         if (scrollOffset != targetScrollOffset) {
             scrollOffset = Mth.lerp(SCROLL_SPEED, scrollOffset, targetScrollOffset);
@@ -109,7 +109,7 @@ public class OptionListWidget extends AbstractWidget {
                 option.setDim(new Dim2i(optionDim.x(), itemY, optionDim.width(), optionDim.height()));
             }
             
-            option.extractRenderState(graphics, mouseX, mouseY, delta);
+            option.render(graphics, mouseX, mouseY, delta);
         }
         
         graphics.disableScissor();
@@ -124,13 +124,13 @@ public class OptionListWidget extends AbstractWidget {
      * Renders overlays (dropdowns, popups) on top of everything.
      * Call this after rendering other UI elements that should appear below.
      */
-    public void renderOverlays(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+    public void renderOverlays(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         for (OptionWidget option : options) {
             option.renderOverlay(graphics, mouseX, mouseY, delta);
         }
     }
     
-    private void renderScrollbar(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+    private void renderScrollbar(GuiGraphics graphics, int mouseX, int mouseY) {
         int scrollbarX = dim.getLimitX() - SCROLLBAR_WIDTH - 1;
         int scrollbarHeight = dim.height();
         

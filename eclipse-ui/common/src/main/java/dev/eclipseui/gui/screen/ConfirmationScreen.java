@@ -1,8 +1,7 @@
 package dev.eclipseui.gui.screen;
 
-import dev.eclipseui.util.ScreenCompat;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -12,7 +11,7 @@ import java.util.function.Consumer;
 /**
  * A simple confirmation dialog screen.
  */
-public class ConfirmationScreen extends ScreenCompat {
+public class ConfirmationScreen extends Screen {
     
     private final Screen parent;
     private final Component message;
@@ -57,7 +56,9 @@ public class ConfirmationScreen extends ScreenCompat {
     }
     
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        this.renderBackground(graphics, mouseX, mouseY, delta);
+
         // Dim background
         graphics.fill(0, 0, this.width, this.height, 0xC0101010);
         
@@ -77,15 +78,15 @@ public class ConfirmationScreen extends ScreenCompat {
         var font = Minecraft.getInstance().font;
         int titleX = dialogX + (DIALOG_WIDTH - font.width(this.title)) / 2;
         int titleY = dialogY + PADDING;
-        graphics.text(font, this.title, titleX, titleY, 0xFFFFFFFF, false);
+        graphics.drawString(font, this.title, titleX, titleY, 0xFFFFFFFF, false);
         
         // Message
         int messageY = titleY + font.lineHeight + 8;
         int messageX = dialogX + (DIALOG_WIDTH - font.width(this.message)) / 2;
-        graphics.text(font, this.message, messageX, messageY, 0xFFAAAAAA, false);
+        graphics.drawString(font, this.message, messageX, messageY, 0xFFAAAAAA, false);
         
         // Render buttons
-        super.extractRenderState(graphics, mouseX, mouseY, delta);
+        super.render(graphics, mouseX, mouseY, delta);
     }
     
     @Override
